@@ -1,58 +1,191 @@
-<!-- SECCIÓN DE PRODUCTIVIDAD Y AGUA -->
-<div class="card">
-    <h3>Día Productivo</h3>
-    <div class="star-rating" id="productivityStars">
-        <span data-value="1">★</span>
-        <span data-value="2">★</span>
-        <span data-value="3">★</span>
-        <span data-value="4">★</span>
-        <span data-value="5">★</span>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Planner</title>
+    <style>
+        :root {
+            --bg-color: #f7f5fa;
+            --card-bg: #ffffff;
+            --primary: #9b72cf;
+            --primary-light: #e8def8;
+            --text-color: #2b2b2b;
+            --border-color: #e0d8ec;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(155, 114, 207, 0.06);
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #4a3b5c;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 6px;
+            background: #faf9fc;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .star-rating {
+            font-size: 26px;
+            color: #d1c7e0;
+            cursor: pointer;
+            letter-spacing: 4px;
+        }
+        .exercise-card {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 8px;
+            background: #fdfcff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .goal-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .goal-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+        .goal-row input[type="text"] {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        .goal-row button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+        }
+        .time-slot {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .time-slot span {
+            font-weight: 600;
+            font-size: 12px;
+            color: #6b5b7b;
+            min-width: 75px;
+        }
+        .time-slot input {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        button.action-btn {
+            background: var(--primary-light);
+            color: #4a3b5c;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 4px;
+            font-size: 13px;
+        }
+        .habit-fixed {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 14px;
+        }
+        .habit-fixed input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
 
-<div class="card">
-    <h3>Agua Consumida</h3>
-    <input type="number" id="waterInput" placeholder="Ej. 2500 (ml) o vasos">
-</div>
-
-<!-- SECCIÓN DE EJERCICIO MÚLTIPLE -->
-<div class="card">
-    <h3>Ejercicio</h3>
-    <div id="exerciseList">
-        <div class="exercise-item">
-            <input type="text" placeholder="Actividad (Ej. Caminata / Pesas)">
-            <input type="text" placeholder="Condición (Ej. Zona 2 / Intenso)">
+    <!-- DÍA PRODUCTIVO -->
+    <div class="card">
+        <h3>Día Productivo</h3>
+        <div class="star-rating" id="productivityStars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
         </div>
     </div>
-    <button onclick="addExerciseField()">+ Añadir otro ejercicio</button>
-</div>
 
-<!-- TOP 3 GOALS -->
-<div class="card">
-    <h3>Top 3 Goals</h3>
-    <div id="topGoalsContainer">
-        <div class="goal-row"><input type="checkbox"> <input type="text" placeholder="Meta 1"><button>❌</button></div>
-        <div class="goal-row"><input type="checkbox"> <input type="text" placeholder="Meta 2"><button>❌</button></div>
-        <div class="goal-row"><input type="checkbox"> <input type="text" placeholder="Meta 3"><button>❌</button></div>
+    <!-- AGUA CONSUMIDA -->
+    <div class="card">
+        <h3>Agua Consumida</h3>
+        <input type="number" id="waterInput" placeholder="Ej. 2500 (ml)">
     </div>
-</div>
 
-<!-- RUTINA DE NOCHE -->
-<div class="card">
-    <h3>Rutina de Noche</h3>
-    <div id="nightRoutineList">
-        <div class="habit-fixed"><input type="checkbox"> Skincare nocturno</div>
-        <div class="habit-fixed"><input type="checkbox"> Preparar día siguiente</div>
+    <!-- EJERCICIO -->
+    <div class="card">
+        <h3>Ejercicio</h3>
+        <div id="exerciseList">
+            <div class="exercise-card">
+                <input type="text" placeholder="Actividad (Ej. Caminata / Pesas)">
+                <input type="text" placeholder="Condición (Ej. Zona 2 / Intenso)">
+            </div>
+        </div>
+        <button class="action-btn" onclick="addExerciseField()">+ Añadir otro ejercicio</button>
     </div>
-    <button onclick="addNightHabit()">+ Añadir hábito</button>
-</div>
 
-<!-- SCHEDULE POR BLOQUES HORARIOS -->
-<div class="card">
-    <h3>Schedule</h3>
-    <div id="scheduleContainer">
-        <div class="time-slot"><span>05:00 - 06:00</span> <input type="text" placeholder="¿Qué harás aquí?"></div>
-        <div class="time-slot"><span>06:00 - 07:00</span> <input type="text" placeholder="¿Qué harás aquí?"></div>
-        <div class="time-slot"><span>07:00 - 08:00</span> <input type="text" placeholder="¿Qué harás aquí?"></div>
+    <!-- TOP 3 GOALS -->
+    <div class="card">
+        <h3>Top 3 Goals</h3>
+        <div id="topGoalsContainer">
+            <div class="goal-row"><input type="checkbox"><input type="text" placeholder="Meta 1"><button>❌</button></div>
+            <div class="goal-row"><input type="checkbox"><input type="text" placeholder="Meta 2"><button>❌</button></div>
+            <div class="goal-row"><input type="checkbox"><input type="text" placeholder="Meta 3"><button>❌</button></div>
+        </div>
     </div>
-</div>
+
+    <!-- RUTINA DE NOCHE -->
+    <div class="card">
+        <h3>Rutina de Noche</h3>
+        <div id="nightRoutineList">
+            <div class="habit-fixed"><input type="checkbox"> Skincare nocturno</div>
+            <div class="habit-fixed"><input type="checkbox"> Preparar día siguiente</div>
+        </div>
+        <button class="action-btn" onclick="addNightHabit()">+ Añadir hábito</button>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="card">
+        <h3>Schedule</h3>
+        <div id="scheduleContainer">
+            <div class="time-slot"><span>05:00 - 06:00</span><input type="text" placeholder="¿Qué harás?"></div>
+            <div class="time-slot"><span>06:00 - 07:00</span><input type="text" placeholder="¿Qué harás?"></div>
+            <div class="time-slot"><span>07:00 - 08:00</span><input type="text" placeholder="¿Qué harás?"></div>
+        </div>
+    </div>
+
+</body>
+</html>
