@@ -3,124 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Planner</title>
+    <title>Mary Daily Planner</title>
     <style>
         :root {
-            --bg-color: #f7f5fa;
+            --bg-color: #fcf8fa;
             --card-bg: #ffffff;
             --primary: #9b72cf;
-            --primary-light: #e8def8;
+            --primary-light: #f3eef9;
+            --accent-pink: #e8a5c8;
             --text-color: #2b2b2b;
-            --border-color: #e0d8ec;
+            --border-color: #f0e6f5;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 12px;
+            padding: 14px;
             max-width: 600px;
             margin: 0 auto;
         }
+        /* Encabezado original */
+        .header-container {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .app-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(155, 114, 207, 0.08);
+            font-weight: 700;
+            font-size: 14px;
+            color: #4a3b5c;
+            margin-bottom: 6px;
+        }
+        .app-badge span { font-size: 16px; }
+        .app-subtitle {
+            font-size: 12px;
+            color: #8c7a9e;
+            font-style: italic;
+            margin-bottom: 14px;
+        }
+        /* Pestañas de navegación */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 3px 10px rgba(155, 114, 207, 0.25);
+        }
+        .tab.inactive {
+            background: #fff;
+            color: #6b5b7b;
+            border: 1px solid var(--border-color);
+        }
+        /* Tarjetas estilo Notion / limpias */
         .card {
             background: var(--card-bg);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 16px;
+            padding: 14px 16px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(155, 114, 207, 0.06);
+            box-shadow: 0 3px 10px rgba(155, 114, 207, 0.06);
+            border: 1px solid rgba(240, 230, 245, 0.6);
         }
         h3 {
             margin-top: 0;
             margin-bottom: 10px;
-            font-size: 15px;
+            font-size: 14px;
             color: #4a3b5c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         input[type="text"], input[type="number"] {
             width: 100%;
-            padding: 10px;
+            padding: 9px 12px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 13px;
             box-sizing: border-box;
-            margin-bottom: 6px;
-            background: #faf9fc;
+            background: #fdfcff;
+            color: var(--text-color);
         }
         input:focus {
             outline: none;
             border-color: var(--primary);
+            background: #fff;
         }
+        /* Estrellas interactivas */
         .star-rating {
-            font-size: 26px;
-            color: #d1c7e0;
+            font-size: 28px;
+            color: #e2d8ec;
             cursor: pointer;
-            letter-spacing: 4px;
+            display: flex;
+            gap: 4px;
         }
-        .exercise-card {
+        .star-rating span.active {
+            color: #f39c12;
+        }
+        /* Ejercicios */
+        .exercise-row {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            margin-bottom: 8px;
-            background: #fdfcff;
+            background: #faf8fc;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 10px;
+            margin-bottom: 8px;
             border: 1px solid var(--border-color);
         }
+        /* Goals */
         .goal-row {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         .goal-row input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             accent-color: var(--primary);
+            cursor: pointer;
         }
         .goal-row input[type="text"] {
-            margin-bottom: 0;
             flex: 1;
         }
-        .goal-row button {
+        .delete-btn {
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
+            font-size: 14px;
+            color: #d9534f;
+            padding: 4px 8px;
         }
+        /* Schedule */
         .time-slot {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         .time-slot span {
             font-weight: 600;
             font-size: 12px;
-            color: #6b5b7b;
-            min-width: 75px;
+            color: #7b688e;
+            min-width: 78px;
         }
         .time-slot input {
-            margin-bottom: 0;
             flex: 1;
         }
-        button.action-btn {
+        /* Botones de acción */
+        .action-btn {
             background: var(--primary-light);
-            color: #4a3b5c;
+            color: #5a4275;
             border: none;
-            padding: 10px;
+            padding: 8px 12px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
+            font-size: 12px;
             margin-top: 4px;
-            font-size: 13px;
+        }
+        .action-btn:hover {
+            background: #e9deff;
         }
         .habit-fixed {
             display: flex;
             align-items: center;
             gap: 10px;
             padding: 6px 0;
-            font-size: 14px;
+            font-size: 13px;
         }
         .habit-fixed input {
             width: 18px;
@@ -131,61 +203,140 @@
 </head>
 <body>
 
-    <!-- DÍA PRODUCTIVO -->
+    <!-- ENCABEZADO Y PESTAÑAS ORIGINALES -->
+    <div class="header-container">
+        <div class="app-badge">
+            <span>🌸</span> MARY DAILY PLANNER
+        </div>
+        <div class="app-subtitle">"Discipline today, success tomorrow."</div>
+        
+        <div class="nav-tabs">
+            <button class="tab active">📅 Planner Diario</button>
+            <button class="tab inactive">🔍 Buscador e Historial</button>
+        </div>
+    </div>
+
+    <!-- DÍA PRODUCTIVO (1 a 5 estrellas) -->
     <div class="card">
-        <h3>Día Productivo</h3>
-        <div class="star-rating" id="productivityStars">
-            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        <h3>⭐ Día Productivo</h3>
+        <div class="star-rating" id="starContainer">
+            <span onclick="setRating(1)">★</span>
+            <span onclick="setRating(2)">★</span>
+            <span onclick="setRating(3)">★</span>
+            <span onclick="setRating(4)">★</span>
+            <span onclick="setRating(5)">★</span>
         </div>
     </div>
 
     <!-- AGUA CONSUMIDA -->
     <div class="card">
-        <h3>Agua Consumida</h3>
-        <input type="number" id="waterInput" placeholder="Ej. 2500 (ml)">
+        <h3>💧 Agua Consumida</h3>
+        <input type="number" id="waterInput" placeholder="Ej. 2500 (ml) o cantidad de vasos">
     </div>
 
-    <!-- EJERCICIO -->
+    <!-- EJERCICIO MÚLTIPLE -->
     <div class="card">
-        <h3>Ejercicio</h3>
+        <h3>🏃‍♀️ Ejercicio</h3>
         <div id="exerciseList">
-            <div class="exercise-card">
+            <div class="exercise-row">
                 <input type="text" placeholder="Actividad (Ej. Caminata / Pesas)">
                 <input type="text" placeholder="Condición (Ej. Zona 2 / Intenso)">
             </div>
         </div>
-        <button class="action-btn" onclick="addExerciseField()">+ Añadir otro ejercicio</button>
+        <button class="action-btn" onclick="addExercise()">+ Añadir otro ejercicio</button>
     </div>
 
     <!-- TOP 3 GOALS -->
     <div class="card">
-        <h3>Top 3 Goals</h3>
-        <div id="topGoalsContainer">
-            <div class="goal-row"><input type="checkbox"><input type="text" placeholder="Meta 1"><button>❌</button></div>
-            <div class="goal-row"><input type="checkbox"><input type="text" placeholder="Meta 2"><button>❌</button></div>
-            <div class="goal-row"><input type="checkbox"><input type="text" placeholder="Meta 3"><button>❌</button></div>
+        <h3>🎯 Top 3 Goals</h3>
+        <div id="goalsList">
+            <div class="goal-row">
+                <input type="checkbox">
+                <input type="text" value="Meta 1">
+                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
+            </div>
+            <div class="goal-row">
+                <input type="checkbox">
+                <input type="text" value="Meta 2">
+                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
+            </div>
+            <div class="goal-row">
+                <input type="checkbox">
+                <input type="text" value="Meta 3">
+                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
+            </div>
         </div>
+        <button class="action-btn" onclick="addGoal()">+ Añadir meta</button>
     </div>
 
     <!-- RUTINA DE NOCHE -->
     <div class="card">
-        <h3>Rutina de Noche</h3>
-        <div id="nightRoutineList">
+        <h3>🌙 Rutina de Noche</h3>
+        <div id="nightList">
             <div class="habit-fixed"><input type="checkbox"> Skincare nocturno</div>
             <div class="habit-fixed"><input type="checkbox"> Preparar día siguiente</div>
         </div>
         <button class="action-btn" onclick="addNightHabit()">+ Añadir hábito</button>
     </div>
 
-    <!-- SCHEDULE -->
+    <!-- SCHEDULE (Bloques de horas fijos) -->
     <div class="card">
-        <h3>Schedule</h3>
+        <h3>⏰ Schedule</h3>
         <div id="scheduleContainer">
             <div class="time-slot"><span>05:00 - 06:00</span><input type="text" placeholder="¿Qué harás?"></div>
             <div class="time-slot"><span>06:00 - 07:00</span><input type="text" placeholder="¿Qué harás?"></div>
             <div class="time-slot"><span>07:00 - 08:00</span><input type="text" placeholder="¿Qué harás?"></div>
+            <div class="time-slot"><span>08:00 - 09:00</span><input type="text" placeholder="¿Qué harás?"></div>
+            <div class="time-slot"><span>09:00 - 10:00</span><input type="text" placeholder="¿Qué harás?"></div>
         </div>
     </div>
 
+    <script>
+        // Lógica para las estrellas
+        function setRating(val) {
+            const stars = document.querySelectorAll('#starContainer span');
+            stars.forEach((star, index) => {
+                if (index < val) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Añadir campo de ejercicio dinámico
+        function addExercise() {
+            const list = document.getElementById('exerciseList');
+            const div = document.createElement('div');
+            div.className = 'exercise-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Actividad (Ej. Caminata / Pesas)">
+                <input type="text" placeholder="Condición (Ej. Zona 2 / Intenso)">
+            `;
+            list.appendChild(div);
+        }
+
+        // Añadir Top Goal
+        function addGoal() {
+            const list = document.getElementById('goalsList');
+            const div = document.createElement('div');
+            div.className = 'goal-row';
+            div.innerHTML = `
+                <input type="checkbox">
+                <input type="text" placeholder="Nueva meta">
+                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
+            `;
+            list.appendChild(div);
+        }
+
+        // Añadir hábito nocturno limpio
+        function addNightHabit() {
+            const list = document.getElementById('nightList');
+            const div = document.createElement('div');
+            div.className = 'habit-fixed';
+            div.innerHTML = `<input type="checkbox"> <input type="text" placeholder="Escribe el hábito" style="border:none; background:transparent; padding:0; font-size:13px;">`;
+            list.appendChild(div);
+        }
+    </script>
 </body>
 </html>
