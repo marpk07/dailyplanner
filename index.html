@@ -61,7 +61,7 @@
 
       <nav class="flex items-center gap-2 bg-[#f7f0f4] p-1 rounded-2xl border border-[#ebd7e3]">
         <button onclick="switchTab('planner')" id="btn-planner" class="nav-btn active px-4 py-1.5 rounded-xl font-bold text-xs text-stone-600">📅 Planner Diario</button>
-        <button onclick="switchTab('search')" id="btn-search" class="nav-btn px-4 py-1.5 rounded-xl font-bold text-xs text-stone-600">🔍 Buscador e Historial</button>
+        <button onclick="switchTab('search')" id="btn-search" class="nav-btn px-4 py-1.5 rounded-xl font-bold text-xs text-stone-600">📊 Reportes & Patrones</button>
       </nav>
 
       <div class="flex items-center space-x-3">
@@ -257,9 +257,9 @@
           </div>
         </div>
 
-        <!-- Health, Water, Energy & Mood -->
+        <!-- Health, Water, Cycle & Moods (Múltiples) -->
         <div class="glass-card rounded-3xl p-5 space-y-3">
-          <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">💧 Health & Wellness</h3>
+          <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">💧 Health, Cycle & Symptoms</h3>
           
           <!-- Water Tracker -->
           <div class="space-y-1">
@@ -269,27 +269,40 @@
             </div>
           </div>
 
-          <!-- Estado de ánimo y Energía -->
-          <div class="grid grid-cols-2 gap-2">
-            <div class="space-y-1">
-              <span class="text-[10px] font-bold text-stone-500 uppercase">Ánimo</span>
-              <select id="health-mood" onchange="autoSaveHealth('mood', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 text-xs font-bold text-stone-700">
-                <option value="">Selecciona...</option>
-                <option value="Motivada 🔥">Motivada 🔥</option>
-                <option value="Tranquila 🧘‍♀️">Tranquila 🧘‍♀️</option>
-                <option value="Feliz 😊">Feliz 😊</option>
-                <option value="Ansiosa ⚡">Ansiosa ⚡</option>
-                <option value="Cansada 🥱">Cansada 🥱</option>
-                <option value="Agradecida 💖">Agradecida 💖</option>
-                <option value="Enfocada 🎯">Enfocada 🎯</option>
-                <option value="Sensible 🌧️">Sensible 🌧️</option>
-                <option value="Estresada 🌀">Estresada 🌀</option>
-                <option value="Bendecida ✨">Bendecida ✨</option>
-              </select>
+          <!-- Ciclo Hormonal -->
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-stone-500 uppercase">Fase Ciclo / Hormonal</span>
+            <select id="health-cycle" onchange="autoSaveHealth('cycle', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 text-xs font-bold text-stone-700">
+              <option value="">Selecciona fase...</option>
+              <option value="Menstruación activa 🩸">Menstruación activa 🩸</option>
+              <option value="Manchado / Spotting">Manchado / Spotting</option>
+              <option value="Ovulación ✨">Ovulación ✨</option>
+              <option value="Fase Lútea">Fase Lútea</option>
+              <option value="Pre-menstrual (PMS)">Pre-menstrual (PMS)</option>
+            </select>
+          </div>
+
+          <!-- Síntomas Hormonales / Físicos (Checkboxes múltiples) -->
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-stone-500 uppercase">Síntomas de hoy</span>
+            <div id="symptoms-checkboxes" class="grid grid-cols-2 gap-1.5 text-[11px] font-medium text-stone-700">
+              <!-- Generado por JS -->
             </div>
-            <div class="space-y-1">
-              <span class="text-[10px] font-bold text-stone-500 uppercase">Energía</span>
-              <select id="health-energy" onchange="autoSaveHealth('energy', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 text-xs font-bold text-stone-700">
+          </div>
+
+          <!-- Estados de Ánimo (Múltiples) -->
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-stone-500 uppercase">Estados de Ánimo (Puedes marcar varios)</span>
+            <div id="moods-checkboxes" class="grid grid-cols-2 gap-1.5 text-[11px] font-medium text-stone-700 max-h-[100px] overflow-y-auto pr-1">
+              <!-- Generado por JS -->
+            </div>
+          </div>
+
+          <!-- Energía, Sueño y Pasos -->
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <div>
+              <label class="font-bold text-stone-500 text-[10px]">Energía</label>
+              <select id="health-energy" onchange="autoSaveHealth('energy', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1 font-bold text-stone-700">
                 <option value="">Nivel...</option>
                 <option value="⚡ Alta">⚡ Alta</option>
                 <option value="🔋 Media">🔋 Media</option>
@@ -297,17 +310,13 @@
                 <option value="💤 Fatiga">💤 Fatiga</option>
               </select>
             </div>
-          </div>
-
-          <!-- Sueño y Pasos -->
-          <div class="grid grid-cols-2 gap-2 text-xs">
             <div>
               <label class="font-bold text-stone-500 text-[10px]">Sueño (hrs)</label>
-              <input type="number" step="0.5" id="health-sleep" oninput="autoSaveHealth('sleep', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 font-bold">
+              <input type="number" step="0.5" id="health-sleep" oninput="autoSaveHealth('sleep', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1 font-bold">
             </div>
             <div>
               <label class="font-bold text-stone-500 text-[10px]">Pasos</label>
-              <input type="number" id="health-steps" oninput="autoSaveHealth('steps', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 font-bold">
+              <input type="number" id="health-steps" oninput="autoSaveHealth('steps', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1 font-bold">
             </div>
           </div>
 
@@ -317,7 +326,7 @@
               <span class="text-[10px] font-black uppercase text-stone-500">Ejercicios del Día</span>
               <button onclick="addExerciseRow()" class="px-2 py-0.5 bg-[#b492cd] text-white font-bold text-[10px] rounded-lg">+ Añadir</button>
             </div>
-            <div id="exercises-list-container" class="space-y-1.5 max-h-[120px] overflow-y-auto">
+            <div id="exercises-list-container" class="space-y-1.5 max-h-[100px] overflow-y-auto">
               <!-- Generado por JS -->
             </div>
           </div>
@@ -394,18 +403,14 @@
 
     </div>
 
-    <!-- VISTA BUSCADOR E HISTORIAL Y ANALIZADOR DE PATRONES -->
+    <!-- VISTA REPORTES Y ANÁLISIS DE PATRONES -->
     <div id="view-search" class="glass-card rounded-3xl p-6 space-y-6 hidden">
       <div>
-        <h3 class="text-base font-black text-stone-800">🔍 Buscador Inteligente & Análisis de Patrones</h3>
-        <p class="text-xs text-stone-500">Busca por palabras clave (ej. "ansiosa", "Moka", "vacuna") o analiza rangos largos de fechas (ej. 3 meses).</p>
+        <h3 class="text-base font-black text-stone-800">📊 Reporte Semanal & Análisis de Patrones</h3>
+        <p class="text-xs text-stone-500">Selecciona el rango de fechas (ej. tu semana de lunes a domingo) para ver el resumen automático de productividad, energía, hábitos y síntomas.</p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-        <div>
-          <label class="font-bold text-stone-600 block mb-1">Palabra Clave</label>
-          <input type="text" id="search-keyword" placeholder="Escribe para buscar..." oninput="executeSearch()" class="w-full bg-white border border-[#ebd7e3] rounded-xl px-3 py-2 font-bold">
-        </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
         <div>
           <label class="font-bold text-stone-600 block mb-1">Desde</label>
           <input type="date" id="search-from" onchange="executeSearch()" class="w-full bg-white border border-[#ebd7e3] rounded-xl px-3 py-2 font-bold">
@@ -416,11 +421,12 @@
         </div>
       </div>
 
-      <!-- Resumen estadístico del rango -->
-      <div id="search-stats" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2"></div>
+      <!-- Tarjetas de Estadísticas del Rango -->
+      <div id="search-stats" class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2"></div>
 
+      <!-- Desglose Día por Día -->
       <div id="search-results" class="space-y-3 pt-4 border-t border-[#ebd7e3]">
-        <p class="text-xs text-stone-400 text-center py-4">Ingresa un criterio de búsqueda o rango de fechas arriba.</p>
+        <p class="text-xs text-stone-400 text-center py-4">Selecciona un rango de fechas para generar el reporte automático.</p>
       </div>
     </div>
 
@@ -433,7 +439,7 @@
 
   <!-- SCRIPT -->
   <script>
-    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V10_';
+    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V11_';
     let currentDate = new Date().toISOString().slice(0, 10);
 
     const defaultMorning = [
@@ -455,6 +461,18 @@
       { id: 4, name: "Skincare", condition: "AM/PM", area: "Self-Care", status: "none" },
       { id: 5, name: "Espacio espiritual", condition: "Oración", area: "Spiritual", status: "none" },
       { id: 6, name: "Ejercicio", condition: "Pesas o Cardio", area: "Fitness", status: "none" }
+    ];
+
+    const availableMoods = [
+      "Motivada 🔥", "Tranquila 🧘‍♀️", "Feliz 😊", "Ansiosa ⚡", "Cansada 🥱", 
+      "Agradecida 💖", "Enfocada 🎯", "Sensible 🌧️", "Estresada 🌀", "Bendecida ✨", 
+      "Apatía 🌫️", "Insomnio 🌙", "Desmotivada 💤", "Rumiación 🌀", "Tristeza 💧"
+    ];
+
+    const availableSymptoms = [
+      "Insomnio 🌙", "Cansancio extremo 🥱", "Dolor de cabeza 🤕", 
+      "Dolor menstrual / Cólicos 🩸", "Ansiedad ⚡", "Hinchazón / Retención 💧", 
+      "Antojos intensos 🍫", "Irritabilidad 🌪️"
     ];
 
     function getStorageKey(date) {
@@ -487,7 +505,7 @@
           snacks: { text: "", cal: "", prot: "", carb: "", fat: "" }
         },
         waterGlasses: 0,
-        health: { mood: "", energy: "", sleep: "", steps: "" },
+        health: { moods: [], symptoms: [], cycle: "", energy: "", sleep: "", steps: "" },
         exercises: [],
         prod: { grind: "", study: "", read: false, rating: 0, reminder: "" },
         reflection: { 1: "", 2: "", 3: "", 4: "", 5: "", 6: "" }
@@ -536,6 +554,15 @@
     function initApp() {
       currentDate = new Date().toISOString().slice(0, 10);
       document.getElementById('global-date').value = currentDate;
+      
+      // Default search dates (current week: Monday to Sunday)
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      const diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      const monday = new Date(today.setDate(diffToMonday)).toISOString().slice(0, 10);
+      document.getElementById('search-from').value = monday;
+      document.getElementById('search-to').value = new Date().toISOString().slice(0, 10);
+
       currentData = loadDayData(currentDate);
       renderAllUI();
     }
@@ -676,7 +703,7 @@
       renderTodoList();
     }
 
-    // Habit Tracker (3 Estados: none -> done -> fail -> rest -> done)
+    // Habit Tracker (3 Estados)
     function renderHabits() {
       const tbody = document.getElementById('habit-table-body');
       tbody.innerHTML = '';
@@ -789,7 +816,7 @@
     function renderMeals() {
       ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(m => {
         const mealObj = currentData.meals[m] || { text: "", cal: "", prot: "", carb: "", fat: "" };
-        const prefix = m[0]; // b, l, d, s
+        const prefix = m[0];
         document.getElementById(`meal-${m}`).value = mealObj.text || '';
         document.getElementById(`${prefix}-cal`).value = mealObj.cal || '';
         document.getElementById(`${prefix}-prot`).value = mealObj.prot || '';
@@ -843,16 +870,56 @@
       renderWater();
     }
 
-    // Health
+    // Health, Cycle & Symptoms
     function renderHealth() {
-      document.getElementById('health-mood').value = currentData.health.mood || '';
+      document.getElementById('health-cycle').value = currentData.health.cycle || '';
       document.getElementById('health-energy').value = currentData.health.energy || '';
       document.getElementById('health-sleep').value = currentData.health.sleep || '';
       document.getElementById('health-steps').value = currentData.health.steps || '';
+
+      // Render Symptoms Checkboxes
+      const symContainer = document.getElementById('symptoms-checkboxes');
+      symContainer.innerHTML = '';
+      availableSymptoms.forEach(sym => {
+        const checked = (currentData.health.symptoms || []).includes(sym);
+        symContainer.innerHTML += `
+          <label class="flex items-center space-x-1.5 cursor-pointer bg-white/60 p-1.5 rounded-lg border border-[#ebd7e3]">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSymptom('${sym}')" class="accent-[#b492cd] w-3.5 h-3.5 rounded">
+            <span>${sym}</span>
+          </label>`;
+      });
+
+      // Render Moods Checkboxes
+      const moodContainer = document.getElementById('moods-checkboxes');
+      moodContainer.innerHTML = '';
+      availableMoods.forEach(mood => {
+        const checked = (currentData.health.moods || []).includes(mood);
+        moodContainer.innerHTML += `
+          <label class="flex items-center space-x-1.5 cursor-pointer bg-white/60 p-1.5 rounded-lg border border-[#ebd7e3]">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleMood('${mood}')" class="accent-[#b492cd] w-3.5 h-3.5 rounded">
+            <span>${mood}</span>
+          </label>`;
+      });
     }
 
     function autoSaveHealth(field, val) {
       currentData.health[field] = val;
+      saveCurrentDay();
+    }
+
+    function toggleSymptom(sym) {
+      if(!currentData.health.symptoms) currentData.health.symptoms = [];
+      const idx = currentData.health.symptoms.indexOf(sym);
+      if(idx > -1) currentData.health.symptoms.splice(idx, 1);
+      else currentData.health.symptoms.push(sym);
+      saveCurrentDay();
+    }
+
+    function toggleMood(mood) {
+      if(!currentData.health.moods) currentData.health.moods = [];
+      const idx = currentData.health.moods.indexOf(mood);
+      if(idx > -1) currentData.health.moods.splice(idx, 1);
+      else currentData.health.moods.push(mood);
       saveCurrentDay();
     }
 
@@ -946,9 +1013,8 @@
       saveCurrentDay();
     }
 
-    // Search & Pattern Analysis
+    // Search & Automatic Weekly Report
     function executeSearch() {
-      const keyword = document.getElementById('search-keyword').value.toLowerCase();
       const fromDate = document.getElementById('search-from').value;
       const toDate = document.getElementById('search-to').value;
       const resultsContainer = document.getElementById('search-results');
@@ -968,49 +1034,47 @@
           const dataJson = localStorage.getItem(key);
           if(!dataJson) continue;
 
-          const parsed = JSON.parse(dataJson);
-          if(keyword) {
-            if(dataJson.toLowerCase().includes(keyword)) {
-              matches.push({ date: dateStr, data: parsed });
-            }
-          } else {
-            matches.push({ date: dateStr, data: parsed });
-          }
+          matches.push({ date: dateStr, data: JSON.parse(dataJson) });
         }
       }
 
       matches.sort((a, b) => b.date.localeCompare(a.date));
 
-      // Calcular estadísticas del rango analizado
       if(matches.length > 0) {
         let totalDays = matches.length;
+        let avgProd = (matches.reduce((acc, m) => acc + parseInt(m.data.prod.rating || 0), 0) / totalDays).toFixed(1);
         let avgSleep = (matches.reduce((acc, m) => acc + parseFloat(m.data.health.sleep || 0), 0) / totalDays).toFixed(1);
         let totalGrind = matches.reduce((acc, m) => acc + parseFloat(m.data.prod.grind || 0), 0).toFixed(1);
 
         statsContainer.innerHTML = `
-          <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Días analizados</strong><span class="text-base font-black text-stone-800">${totalDays}</span></div>
+          <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Días en reporte</strong><span class="text-base font-black text-stone-800">${totalDays}</span></div>
+          <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Promedio Productividad</strong><span class="text-base font-black text-amber-500">⭐ ${avgProd} / 5</span></div>
           <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Promedio Sueño</strong><span class="text-base font-black text-[#b492cd]">${avgSleep} hrs</span></div>
           <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Total Grind (Póker)</strong><span class="text-base font-black text-[#c879a8]">${totalGrind} hrs</span></div>
         `;
       }
 
       if(matches.length === 0) {
-        resultsContainer.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No se encontraron registros en el buscador.</p>`;
+        resultsContainer.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No hay registros en este rango de fechas.</p>`;
         return;
       }
+
+      resultsContainer.innerHTML = `<h4 class="text-xs font-black uppercase tracking-wider text-stone-700 pb-2">Desglose Día por Día en el Rango</h4>`;
 
       matches.forEach(m => {
         const d = m.date;
         const dat = m.data;
+        const moodsStr = (dat.health.moods || []).join(', ') || 'N/A';
+        const symsStr = (dat.health.symptoms || []).join(', ') || 'Ninguno';
+
         resultsContainer.innerHTML += `
-          <div class="glass-card p-4 rounded-2xl space-y-2 cursor-pointer transition hover:border-[#b492cd]" onclick="jumpToDate('${d}')">
+          <div class="glass-card p-4 rounded-2xl space-y-1.5 cursor-pointer transition hover:border-[#b492cd]" onclick="jumpToDate('${d}')">
             <div class="flex justify-between items-center">
-              <strong class="text-xs font-black text-stone-800">📅 Fecha: ${d}</strong>
+              <strong class="text-xs font-black text-stone-800">📅 ${d} · Productividad: ⭐ ${dat.prod.rating || 0}/5</strong>
               <span class="text-[10px] font-bold text-[#b492cd] bg-[#f3ecf5] px-2 py-0.5 rounded-md">Ver día ↗</span>
             </div>
-            <p class="text-xs text-stone-600"><strong>Intención:</strong> ${dat.intention || 'Sin especificar'}</p>
-            <p class="text-xs text-stone-600"><strong>Ánimo:</strong> ${dat.health.mood || 'N/A'} | <strong>Energía:</strong> ${dat.health.energy || 'N/A'} | <strong>Sueño:</strong> ${dat.health.sleep || '-'} hrs</p>
-            ${dat.reflection[1] ? `<p class="text-xs text-stone-500 italic">"Reflexión: ${dat.reflection[1]}"</p>` : ''}
+            <p class="text-xs text-stone-600"><strong>Ánimo:</strong> ${moodsStr} | <strong>Energía:</strong> ${dat.health.energy || 'N/A'} | <strong>Ciclo:</strong> ${dat.health.cycle || 'No especificado'}</p>
+            <p class="text-xs text-stone-500"><strong>Síntomas:</strong> ${symsStr} | <strong>Sueño:</strong> ${dat.health.sleep || '-'} hrs</p>
           </div>`;
       });
     }
