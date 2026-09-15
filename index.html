@@ -1,342 +1,290 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mary Daily Planner</title>
-    <style>
-        :root {
-            --bg-color: #fcf8fa;
-            --card-bg: #ffffff;
-            --primary: #9b72cf;
-            --primary-light: #f3eef9;
-            --accent-pink: #e8a5c8;
-            --text-color: #2b2b2b;
-            --border-color: #f0e6f5;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 14px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        /* Encabezado original */
-        .header-container {
-            text-align: center;
-            margin-bottom: 16px;
-        }
-        .app-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            box-shadow: 0 2px 6px rgba(155, 114, 207, 0.08);
-            font-weight: 700;
-            font-size: 14px;
-            color: #4a3b5c;
-            margin-bottom: 6px;
-        }
-        .app-badge span { font-size: 16px; }
-        .app-subtitle {
-            font-size: 12px;
-            color: #8c7a9e;
-            font-style: italic;
-            margin-bottom: 14px;
-        }
-        /* Pestañas de navegación */
-        .nav-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        .tab {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .tab.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 3px 10px rgba(155, 114, 207, 0.25);
-        }
-        .tab.inactive {
-            background: #fff;
-            color: #6b5b7b;
-            border: 1px solid var(--border-color);
-        }
-        /* Tarjetas estilo Notion / limpias */
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 3px 10px rgba(155, 114, 207, 0.06);
-            border: 1px solid rgba(240, 230, 245, 0.6);
-        }
-        h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #4a3b5c;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 9px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 13px;
-            box-sizing: border-box;
-            background: #fdfcff;
-            color: var(--text-color);
-        }
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #fff;
-        }
-        /* Estrellas interactivas */
-        .star-rating {
-            font-size: 28px;
-            color: #e2d8ec;
-            cursor: pointer;
-            display: flex;
-            gap: 4px;
-        }
-        .star-rating span.active {
-            color: #f39c12;
-        }
-        /* Ejercicios */
-        .exercise-row {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            background: #faf8fc;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border-color);
-        }
-        /* Goals */
-        .goal-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .goal-row input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-        .goal-row input[type="text"] {
-            flex: 1;
-        }
-        .delete-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            color: #d9534f;
-            padding: 4px 8px;
-        }
-        /* Schedule */
-        .time-slot {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .time-slot span {
-            font-weight: 600;
-            font-size: 12px;
-            color: #7b688e;
-            min-width: 78px;
-        }
-        .time-slot input {
-            flex: 1;
-        }
-        /* Botones de acción */
-        .action-btn {
-            background: var(--primary-light);
-            color: #5a4275;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-        .action-btn:hover {
-            background: #e9deff;
-        }
-        .habit-fixed {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 0;
-            font-size: 13px;
-        }
-        .habit-fixed input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MARY · Daily Planner & Journal</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🌸?style=apple">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    body {
+      background: 
+        radial-gradient(circle at 10% 15%, rgba(217, 167, 199, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 90% 85%, rgba(180, 146, 205, 0.25) 0%, transparent 45%),
+        linear-gradient(135deg, #fcf8fa 0%, #f7f1f5 50%, #f3ecf5 100%);
+      color: #3d2c3d;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(217, 167, 199, 0.4);
+      box-shadow: 0 10px 30px rgba(120, 80, 100, 0.06);
+    }
+
+    .nav-btn {
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, #b492cd 0%, #c879a8) !important;
+      color: #ffffff !important;
+      font-weight: 800;
+      box-shadow: 0 4px 15px rgba(180, 146, 205, 0.4);
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f0e6ed; }
+    ::-webkit-scrollbar-thumb { background: #d9a7c7; border-radius: 999px; }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col antialiased selection:bg-[#d9a7c7] selection:text-white">
 
-    <!-- ENCABEZADO Y PESTAÑAS ORIGINALES -->
-    <div class="header-container">
-        <div class="app-badge">
-            <span>🌸</span> MARY DAILY PLANNER
+  <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-[#ebd7e3] shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#b492cd] to-[#d9a7c7] flex items-center justify-center font-black text-white text-base shadow-md">🌸</div>
+        <div>
+          <h1 class="text-sm font-black tracking-widest uppercase text-stone-800">MARY <span class="text-[#c879a8]">DAILY PLANNER</span></h1>
+          <p class="text-[10px] font-medium text-stone-500 italic">"Discipline today, success tomorrow."</p>
         </div>
-        <div class="app-subtitle">"Discipline today, success tomorrow."</div>
+      </div>
+
+      <nav class="flex items-center gap-2 bg-[#f7f0f4] p-1 rounded-2xl border border-[#ebd7e3]">
+        <button onclick="switchTab('planner')" id="btn-planner" class="nav-btn active px-4 py-1.5 rounded-xl font-bold text-xs text-stone-600">📅 Planner Diario</button>
+        <button onclick="switchTab('search')" id="btn-search" class="nav-btn px-4 py-1.5 rounded-xl font-bold text-xs text-stone-600">🔍 Buscador e Historial</button>
+      </nav>
+
+      <div class="flex items-center space-x-2">
+        <input type="date" id="global-date" onchange="changeDate(this.value)" class="bg-white border border-[#ebd7e3] rounded-xl px-3 py-1.5 text-xs font-black text-stone-700 focus:outline-none shadow-xs">
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 space-y-6">
+
+    <div id="view-planner" class="space-y-6">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="glass-card rounded-3xl p-5 space-y-2 border-l-4 border-l-[#b492cd]">
+          <span class="text-[10px] font-black uppercase text-[#b492cd] tracking-wider">✝️ Versículo del Día</span>
+          <p class="text-xs font-semibold text-stone-700 italic">"Todo lo puedo en Cristo que me fortalece."</p>
+          <p class="text-[10px] text-stone-400 font-bold">Filipenses 4:13</p>
+        </div>
+
+        <div class="glass-card rounded-3xl p-5 space-y-2 border-l-4 border-l-[#c879a8]">
+          <span class="text-[10px] font-black uppercase text-[#c879a8] tracking-wider">✨ Intención del Día</span>
+          <textarea id="field-intention" oninput="autoSaveField('intention', this.value)" rows="2" placeholder="¿Cuál es tu enfoque o energía principal hoy?" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-2 text-xs font-medium text-stone-800 focus:outline-none resize-none"></textarea>
+        </div>
+
+        <div class="glass-card rounded-3xl p-5 space-y-2 border-l-4 border-l-[#d9a7c7]">
+          <span class="text-[10px] font-black uppercase text-[#b492cd] tracking-wider">💖 Estoy Agradecida Por</span>
+          <div class="space-y-1.5" id="gratitude-container">
+            <input type="text" placeholder="1. " class="gratitude-input w-full bg-white/60 border border-[#ebd7e3] rounded-lg px-2 py-1 text-xs font-medium text-stone-800 focus:outline-none" oninput="saveGratitude()">
+            <input type="text" placeholder="2. " class="gratitude-input w-full bg-white/60 border border-[#ebd7e3] rounded-lg px-2 py-1 text-xs font-medium text-stone-800 focus:outline-none" oninput="saveGratitude()">
+            <input type="text" placeholder="3. " class="gratitude-input w-full bg-white/60 border border-[#ebd7e3] rounded-lg px-2 py-1 text-xs font-medium text-stone-800 focus:outline-none" oninput="saveGratitude()">
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <div class="nav-tabs">
-            <button class="tab active">📅 Planner Diario</button>
-            <button class="tab inactive">🔍 Buscador e Historial</button>
-        </div>
-    </div>
-
-    <!-- DÍA PRODUCTIVO (1 a 5 estrellas) -->
-    <div class="card">
-        <h3>⭐ Día Productivo</h3>
-        <div class="star-rating" id="starContainer">
-            <span onclick="setRating(1)">★</span>
-            <span onclick="setRating(2)">★</span>
-            <span onclick="setRating(3)">★</span>
-            <span onclick="setRating(4)">★</span>
-            <span onclick="setRating(5)">★</span>
-        </div>
-    </div>
-
-    <!-- AGUA CONSUMIDA -->
-    <div class="card">
-        <h3>💧 Agua Consumida</h3>
-        <input type="number" id="waterInput" placeholder="Ej. 2500 (ml) o cantidad de vasos">
-    </div>
-
-    <!-- EJERCICIO MÚLTIPLE -->
-    <div class="card">
-        <h3>🏃‍♀️ Ejercicio</h3>
-        <div id="exerciseList">
-            <div class="exercise-row">
-                <input type="text" placeholder="Actividad (Ej. Caminata / Pesas)">
-                <input type="text" placeholder="Condición (Ej. Zona 2 / Intenso)">
+        <div class="lg:col-span-5 glass-card rounded-3xl p-5 space-y-3">
+          <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
+            <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">⏰ Schedule (5:00 AM - 5:00 AM)</h3>
+            <button onclick="clearSchedule()" class="text-[10px] font-bold text-red-400 hover:underline">Limpiar Horario</button>
+          </div>
+          <div id="schedule-container" class="space-y-1.5 max-h-[600px] overflow-y-auto pr-2">
             </div>
         </div>
-        <button class="action-btn" onclick="addExercise()">+ Añadir otro ejercicio</button>
-    </div>
 
-    <!-- TOP 3 GOALS -->
-    <div class="card">
-        <h3>🎯 Top 3 Goals</h3>
-        <div id="goalsList">
-            <div class="goal-row">
-                <input type="checkbox">
-                <input type="text" value="Meta 1">
-                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
+        <div class="lg:col-span-7 space-y-6">
+          <div class="glass-card rounded-3xl p-5 space-y-3">
+            <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">🎯 Top 3 Goals</h3>
+            <div id="top-goals-container" class="space-y-2">
+              </div>
+          </div>
+
+          <div class="glass-card rounded-3xl p-5 space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
+              <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">📝 To-Do List</h3>
+              <button onclick="addToDoItem()" class="px-2.5 py-1 bg-[#b492cd] text-white font-bold text-[10px] rounded-lg shadow-xs">+ Añadir Tarea</button>
             </div>
-            <div class="goal-row">
-                <input type="checkbox">
-                <input type="text" value="Meta 2">
-                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
+            <div id="todo-container" class="space-y-2 max-h-[250px] overflow-y-auto pr-1">
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-7 glass-card rounded-3xl p-5 space-y-3">
+          <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
+            <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">✨ Daily Habit Tracker</h3>
+            <button onclick="addHabitRow()" class="px-2.5 py-1 bg-[#c879a8] text-white font-bold text-[10px] rounded-lg shadow-xs">+ Nuevo Hábito</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead>
+                <tr class="text-[10px] font-black uppercase text-stone-400 border-b border-[#ebd7e3]">
+                  <th class="pb-2">Hábito</th>
+                  <th class="pb-2">Condición / Parámetro</th>
+                  <th class="pb-2">Área</th>
+                  <th class="pb-2 text-center">Hoy (✓)</th>
+                  <th class="pb-2 text-right">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="habit-table-body" class="divide-y divide-[#ebd7e3]/50">
+                </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-6">
+          <div class="glass-card rounded-3xl p-5 space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
+              <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">🌅 Morning Routine</h3>
+              <button onclick="addRoutineItem('morning')" class="text-[10px] font-bold text-[#b492cd]">+ Añadir</button>
             </div>
-            <div class="goal-row">
-                <input type="checkbox">
-                <input type="text" value="Meta 3">
-                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
+            <div id="morning-routine-container" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+              </div>
+          </div>
+
+          <div class="glass-card rounded-3xl p-5 space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
+              <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">🌙 Night Routine</h3>
+              <button onclick="addRoutineItem('night')" class="text-[10px] font-bold text-[#b492cd]">+ Añadir</button>
             </div>
+            <div id="night-routine-container" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+              </div>
+          </div>
         </div>
-        <button class="action-btn" onclick="addGoal()">+ Añadir meta</button>
-    </div>
 
-    <!-- RUTINA DE NOCHE -->
-    <div class="card">
-        <h3>🌙 Rutina de Noche</h3>
-        <div id="nightList">
-            <div class="habit-fixed"><input type="checkbox"> Skincare nocturno</div>
-            <div class="habit-fixed"><input type="checkbox"> Preparar día siguiente</div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="glass-card rounded-3xl p-5 space-y-3">
+          <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">🍽️ Meal Plan</h3>
+          <div class="space-y-2 text-xs">
+            <div>
+              <label class="font-bold text-stone-500 text-[10px]">Breakfast</label>
+              <input type="text" id="meal-breakfast" oninput="autoSaveMeal('breakfast', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+            </div>
+            <div>
+              <label class="font-bold text-stone-500 text-[10px]">Lunch</label>
+              <input type="text" id="meal-lunch" oninput="autoSaveMeal('lunch', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+            </div>
+            <div>
+              <label class="font-bold text-stone-600 text-[10px]">Dinner</label>
+              <input type="text" id="meal-dinner" oninput="autoSaveMeal('dinner', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+            </div>
+            <div>
+              <label class="font-bold text-stone-500 text-[10px]">Snacks</label>
+              <input type="text" id="meal-snacks" oninput="autoSaveMeal('snacks', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+            </div>
+          </div>
         </div>
-        <button class="action-btn" onclick="addNightHabit()">+ Añadir hábito</button>
-    </div>
 
-    <!-- SCHEDULE (Bloques de horas fijos) -->
-    <div class="card">
-        <h3>⏰ Schedule</h3>
-        <div id="scheduleContainer">
-            <div class="time-slot"><span>05:00 - 06:00</span><input type="text" placeholder="¿Qué harás?"></div>
-            <div class="time-slot"><span>06:00 - 07:00</span><input type="text" placeholder="¿Qué harás?"></div>
-            <div class="time-slot"><span>07:00 - 08:00</span><input type="text" placeholder="¿Qué harás?"></div>
-            <div class="time-slot"><span>08:00 - 09:00</span><input type="text" placeholder="¿Qué harás?"></div>
-            <div class="time-slot"><span>09:00 - 10:00</span><input type="text" placeholder="¿Qué harás?"></div>
+        <div class="glass-card rounded-3xl p-5 space-y-4">
+          <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">💧 Health & Wellness</h3>
+          
+          <div class="space-y-1.5">
+            <span class="text-[10px] font-bold text-stone-500 uppercase">Water Tracker (Vasos / Gotas)</span>
+            <div id="water-drops-container" class="flex flex-wrap gap-2 pt-1">
+              </div>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-stone-500 uppercase">Estado de Ánimo</span>
+            <select id="health-mood" onchange="autoSaveHealth('mood', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-2 text-xs font-bold text-stone-700">
+              <option value="">Selecciona cómo te sientes...</option>
+              <option value="Motivada 🔥">Motivada 🔥</option>
+              <option value="Tranquila 🧘‍♀️">Tranquila 🧘‍♀️</option>
+              <option value="Feliz 😊">Feliz 😊</option>
+              <option value="Ansiosa ⚡">Ansiosa ⚡</option>
+              <option value="Cansada 🥱">Cansada 🥱</option>
+              <option value="Agradecida 💖">Agradecida 💖</option>
+              <option value="Enfocada 🎯">Enfocada 🎯</option>
+              <option value="Sensible 🌧️">Sensible 🌧️</option>
+              <option value="Estresada 🌀">Estresada 🌀</option>
+              <option value="Bendecida ✨">Bendecida ✨</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="font-bold text-stone-500 text-[10px]">Sueño (hrs)</label>
+              <input type="number" step="0.5" id="health-sleep" oninput="autoSaveHealth('sleep', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 font-bold">
+            </div>
+            <div>
+              <label class="font-bold text-stone-500 text-[10px]">Pasos</label>
+              <input type="number" id="health-steps" oninput="autoSaveHealth('steps', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 font-bold">
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-2 border-t border-[#ebd7e3]">
+            <div class="flex justify-between items-center">
+              <span class="text-[10px] font-bold text-stone-500 uppercase">Ejercicios del día</span>
+              <button onclick="addExerciseRow()" class="text-[10px] font-extrabold text-[#b492cd]">+ Añadir</button>
+            </div>
+            <div id="exercises-container" class="space-y-2">
+              </div>
+          </div>
         </div>
-    </div>
 
-    <script>
-        // Lógica para las estrellas
-        function setRating(val) {
-            const stars = document.querySelectorAll('#starContainer span');
-            stars.forEach((star, index) => {
-                if (index < val) {
-                    star.classList.add('active');
-                } else {
-                    star.classList.remove('active');
-                }
-            });
-        }
+        <div class="glass-card rounded-3xl p-5 space-y-4">
+          <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">⚡ Área Productividad</h3>
+          
+          <div class="space-y-3 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="font-bold text-stone-500 text-[10px]">Grind (hrs)</label>
+                <input type="number" step="0.5" id="prod-grind" oninput="autoSaveProd('grind', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 font-bold">
+              </div>
+              <div>
+                <label class="font-bold text-stone-500 text-[10px]">Estudio (hrs)</label>
+                <input type="number" step="0.5" id="prod-study" oninput="autoSaveProd('study', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 font-bold">
+              </div>
+            </div>
 
-        // Añadir campo de ejercicio dinámico
-        function addExercise() {
-            const list = document.getElementById('exerciseList');
-            const div = document.createElement('div');
-            div.className = 'exercise-row';
-            div.innerHTML = `
-                <input type="text" placeholder="Actividad (Ej. Caminata / Pesas)">
-                <input type="text" placeholder="Condición (Ej. Zona 2 / Intenso)">
-            `;
-            list.appendChild(div);
-        }
+            <div class="flex items-center justify-between bg-white/60 p-2 rounded-xl border border-[#ebd7e3]">
+              <span class="font-bold text-stone-700">📖 ¿Leí hoy?</span>
+              <input type="checkbox" id="prod-read" onchange="autoSaveProd('read', this.checked)" class="accent-[#b492cd] w-4 h-4 rounded">
+            </div>
 
-        // Añadir Top Goal
-        function addGoal() {
-            const list = document.getElementById('goalsList');
-            const div = document.createElement('div');
-            div.className = 'goal-row';
-            div.innerHTML = `
-                <input type="checkbox">
-                <input type="text" placeholder="Nueva meta">
-                <button class="delete-btn" onclick="this.parentElement.remove()">❌</button>
-            `;
-            list.appendChild(div);
-        }
+            <div class="space-y-1">
+              <span class="text-[10px] font-bold text-stone-500 uppercase">Califica tu productividad (1 a 5 estrellas)</span>
+              <div id="star-rating" class="flex gap-1 text-xl cursor-pointer">
+                </div>
+            </div>
 
-        // Añadir hábito nocturno limpio
-        function addNightHabit() {
-            const list = document.getElementById('nightList');
-            const div = document.createElement('div');
-            div.className = 'habit-fixed';
-            div.innerHTML = `<input type="checkbox"> <input type="text" placeholder="Escribe el hábito" style="border:none; background:transparent; padding:0; font-size:13px;">`;
-            list.appendChild(div);
-        }
-    </script>
-</body>
-</html>
+            <div>
+              <label class="font-bold text-stone-500 text-[10px]">🔔 Recordatorio para el Día Siguiente</label>
+              <textarea id="prod-reminder" oninput="autoSaveProd('reminder', this.value)" rows="2" placeholder="Nota importante..." class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-2 text-xs font-medium resize-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="glass-card rounded-3xl p-6 space-y-4">
+        <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">✍️ Journal & Reflexión del Día</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="space-y-1">
+            <label class="font-bold text-stone-700">1. ¿Qué hice bien hoy?</label>
+            <textarea id="ref-1" oninput="autoSaveRef(1, this.value)" rows="2" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-2 font-medium"></textarea>
+          </div>
+          <div class="space-y-1">
+            <label class="font-bold text-stone-700">2. ¿Qué pude hacer mejor?</label>
+            <textarea id="ref-2" oninput="autoSaveRef(2, this.value)" rows="2" class="w-full bg-white/6
+
+    
