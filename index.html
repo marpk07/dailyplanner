@@ -64,8 +64,9 @@
         <button onclick="switchTab('search')" id="btn-search" class="nav-btn px-4 py-1.5 rounded-xl font-bold text-xs text-stone-600">🔍 Buscador e Historial</button>
       </nav>
 
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-3">
         <input type="date" id="global-date" onchange="changeDate(this.value)" class="bg-white border border-[#ebd7e3] rounded-xl px-3 py-1.5 text-xs font-black text-stone-700 focus:outline-none shadow-xs">
+        <button onclick="saveDayManual()" class="px-4 py-1.5 bg-[#b492cd] hover:bg-[#a37fb8] text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer">💾 Guardar Día</button>
       </div>
     </div>
   </header>
@@ -142,10 +143,13 @@
       <!-- FILA HABIT TRACKER Y RUTINAS -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- Habit Tracker -->
+        <!-- Habit Tracker (Con 3 estados: Hecho, No hecho, Descanso) -->
         <div class="lg:col-span-7 glass-card rounded-3xl p-5 space-y-3">
           <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
-            <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">✨ Daily Habit Tracker</h3>
+            <div>
+              <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">✨ Daily Habit Tracker</h3>
+              <p class="text-[10px] text-stone-400">Haz clic en el estado para cambiar: ✓ Hecho | ✗ No hecho | ➖ Descanso</p>
+            </div>
             <button onclick="addHabitRow()" class="px-2.5 py-1 bg-[#c879a8] text-white font-bold text-[10px] rounded-lg shadow-xs">+ Nuevo Hábito</button>
           </div>
           <div class="overflow-x-auto">
@@ -155,7 +159,7 @@
                   <th class="pb-2">Hábito</th>
                   <th class="pb-2">Condición</th>
                   <th class="pb-2">Área</th>
-                  <th class="pb-2 text-center">Hoy (✓)</th>
+                  <th class="pb-2 text-center">Estado (Clic)</th>
                   <th class="pb-2 text-right">Acción</th>
                 </tr>
               </thead>
@@ -196,57 +200,103 @@
       <!-- FILA SALUD, MEAL PLAN Y PRODUCTIVIDAD -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- Meal Plan -->
+        <!-- Meal Plan con Macros (Cal, Prot, Carb, Fat) -->
         <div class="glass-card rounded-3xl p-5 space-y-3">
-          <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">🍽️ Meal Plan</h3>
-          <div class="space-y-2 text-xs">
-            <div>
-              <label class="font-bold text-stone-500 text-[10px]">Breakfast</label>
-              <input type="text" id="meal-breakfast" oninput="autoSaveMeal('breakfast', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+          <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
+            <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">🍽️ Meal Plan & Macros</h3>
+            <span id="meal-total-macros" class="text-[10px] font-extrabold text-[#b492cd]">🔥 0 kcal</span>
+          </div>
+          <div class="space-y-3 text-xs max-h-[400px] overflow-y-auto pr-1">
+            <!-- Breakfast -->
+            <div class="bg-white/50 p-2.5 rounded-2xl border border-[#ebd7e3] space-y-1.5">
+              <span class="font-bold text-stone-700 text-[11px]">Breakfast</span>
+              <input type="text" id="meal-breakfast" placeholder="Alimentos..." oninput="autoSaveMeal('breakfast', 'text', this.value)" class="w-full bg-white border border-[#ebd7e3] rounded-lg px-2 py-1 font-medium">
+              <div class="grid grid-cols-4 gap-1">
+                <input type="number" placeholder="kcal" id="b-cal" oninput="autoSaveMeal('breakfast', 'cal', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Prot" id="b-prot" oninput="autoSaveMeal('breakfast', 'prot', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Carb" id="b-carb" oninput="autoSaveMeal('breakfast', 'carb', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Grasa" id="b-fat" oninput="autoSaveMeal('breakfast', 'fat', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+              </div>
             </div>
-            <div>
-              <label class="font-bold text-stone-500 text-[10px]">Lunch</label>
-              <input type="text" id="meal-lunch" oninput="autoSaveMeal('lunch', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+
+            <!-- Lunch -->
+            <div class="bg-white/50 p-2.5 rounded-2xl border border-[#ebd7e3] space-y-1.5">
+              <span class="font-bold text-stone-700 text-[11px]">Lunch</span>
+              <input type="text" id="meal-lunch" placeholder="Alimentos..." oninput="autoSaveMeal('lunch', 'text', this.value)" class="w-full bg-white border border-[#ebd7e3] rounded-lg px-2 py-1 font-medium">
+              <div class="grid grid-cols-4 gap-1">
+                <input type="number" placeholder="kcal" id="l-cal" oninput="autoSaveMeal('lunch', 'cal', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Prot" id="l-prot" oninput="autoSaveMeal('lunch', 'prot', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Carb" id="l-carb" oninput="autoSaveMeal('lunch', 'carb', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Grasa" id="l-fat" oninput="autoSaveMeal('lunch', 'fat', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+              </div>
             </div>
-            <div>
-              <label class="font-bold text-stone-600 text-[10px]">Dinner</label>
-              <input type="text" id="meal-dinner" oninput="autoSaveMeal('dinner', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+
+            <!-- Dinner -->
+            <div class="bg-white/50 p-2.5 rounded-2xl border border-[#ebd7e3] space-y-1.5">
+              <span class="font-bold text-stone-700 text-[11px]">Dinner</span>
+              <input type="text" id="meal-dinner" placeholder="Alimentos..." oninput="autoSaveMeal('dinner', 'text', this.value)" class="w-full bg-white border border-[#ebd7e3] rounded-lg px-2 py-1 font-medium">
+              <div class="grid grid-cols-4 gap-1">
+                <input type="number" placeholder="kcal" id="d-cal" oninput="autoSaveMeal('dinner', 'cal', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Prot" id="d-prot" oninput="autoSaveMeal('dinner', 'prot', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Carb" id="d-carb" oninput="autoSaveMeal('dinner', 'carb', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Grasa" id="d-fat" oninput="autoSaveMeal('dinner', 'fat', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+              </div>
             </div>
-            <div>
-              <label class="font-bold text-stone-500 text-[10px]">Snacks</label>
-              <input type="text" id="meal-snacks" oninput="autoSaveMeal('snacks', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl px-2.5 py-1.5 font-medium">
+
+            <!-- Snacks -->
+            <div class="bg-white/50 p-2.5 rounded-2xl border border-[#ebd7e3] space-y-1.5">
+              <span class="font-bold text-stone-700 text-[11px]">Snacks</span>
+              <input type="text" id="meal-snacks" placeholder="Snacks..." oninput="autoSaveMeal('snacks', 'text', this.value)" class="w-full bg-white border border-[#ebd7e3] rounded-lg px-2 py-1 font-medium">
+              <div class="grid grid-cols-4 gap-1">
+                <input type="number" placeholder="kcal" id="s-cal" oninput="autoSaveMeal('snacks', 'cal', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Prot" id="s-prot" oninput="autoSaveMeal('snacks', 'prot', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Carb" id="s-carb" oninput="autoSaveMeal('snacks', 'carb', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+                <input type="number" placeholder="Grasa" id="s-fat" oninput="autoSaveMeal('snacks', 'fat', this.value)" class="bg-white border border-[#ebd7e3] rounded p-1 text-[11px] font-bold">
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Health, Water, Exercise & Mood -->
-        <div class="glass-card rounded-3xl p-5 space-y-4">
+        <!-- Health, Water, Energy & Mood -->
+        <div class="glass-card rounded-3xl p-5 space-y-3">
           <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">💧 Health & Wellness</h3>
           
           <!-- Water Tracker -->
-          <div class="space-y-1.5">
+          <div class="space-y-1">
             <span class="text-[10px] font-bold text-stone-500 uppercase">Water Tracker (8 vasos)</span>
             <div id="water-drops-container" class="flex flex-wrap gap-2 pt-1">
               <!-- Generado por JS -->
             </div>
           </div>
 
-          <!-- Estado de ánimo -->
-          <div class="space-y-1">
-            <span class="text-[10px] font-bold text-stone-500 uppercase">Estado de Ánimo</span>
-            <select id="health-mood" onchange="autoSaveHealth('mood', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-2 text-xs font-bold text-stone-700">
-              <option value="">Selecciona cómo te sientes...</option>
-              <option value="Motivada 🔥">Motivada 🔥</option>
-              <option value="Tranquila 🧘‍♀️">Tranquila 🧘‍♀️</option>
-              <option value="Feliz 😊">Feliz 😊</option>
-              <option value="Ansiosa ⚡">Ansiosa ⚡</option>
-              <option value="Cansada 🥱">Cansada 🥱</option>
-              <option value="Agradecida 💖">Agradecida 💖</option>
-              <option value="Enfocada 🎯">Enfocada 🎯</option>
-              <option value="Sensible 🌧️">Sensible 🌧️</option>
-              <option value="Estresada 🌀">Estresada 🌀</option>
-              <option value="Bendecida ✨">Bendecida ✨</option>
-            </select>
+          <!-- Estado de ánimo y Energía -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-1">
+              <span class="text-[10px] font-bold text-stone-500 uppercase">Ánimo</span>
+              <select id="health-mood" onchange="autoSaveHealth('mood', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 text-xs font-bold text-stone-700">
+                <option value="">Selecciona...</option>
+                <option value="Motivada 🔥">Motivada 🔥</option>
+                <option value="Tranquila 🧘‍♀️">Tranquila 🧘‍♀️</option>
+                <option value="Feliz 😊">Feliz 😊</option>
+                <option value="Ansiosa ⚡">Ansiosa ⚡</option>
+                <option value="Cansada 🥱">Cansada 🥱</option>
+                <option value="Agradecida 💖">Agradecida 💖</option>
+                <option value="Enfocada 🎯">Enfocada 🎯</option>
+                <option value="Sensible 🌧️">Sensible 🌧️</option>
+                <option value="Estresada 🌀">Estresada 🌀</option>
+                <option value="Bendecida ✨">Bendecida ✨</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <span class="text-[10px] font-bold text-stone-500 uppercase">Energía</span>
+              <select id="health-energy" onchange="autoSaveHealth('energy', this.value)" class="w-full bg-white/60 border border-[#ebd7e3] rounded-xl p-1.5 text-xs font-bold text-stone-700">
+                <option value="">Nivel...</option>
+                <option value="⚡ Alta">⚡ Alta</option>
+                <option value="🔋 Media">🔋 Media</option>
+                <option value="🪫 Baja">🪫 Baja</option>
+                <option value="💤 Fatiga">💤 Fatiga</option>
+              </select>
+            </div>
           </div>
 
           <!-- Sueño y Pasos -->
@@ -262,18 +312,18 @@
           </div>
 
           <!-- Múltiples Ejercicios -->
-          <div class="space-y-2 pt-2 border-t border-[#ebd7e3]">
+          <div class="space-y-1.5 pt-1 border-t border-[#ebd7e3]">
             <div class="flex justify-between items-center">
               <span class="text-[10px] font-black uppercase text-stone-500">Ejercicios del Día</span>
               <button onclick="addExerciseRow()" class="px-2 py-0.5 bg-[#b492cd] text-white font-bold text-[10px] rounded-lg">+ Añadir</button>
             </div>
-            <div id="exercises-list-container" class="space-y-2 max-h-[140px] overflow-y-auto">
+            <div id="exercises-list-container" class="space-y-1.5 max-h-[120px] overflow-y-auto">
               <!-- Generado por JS -->
             </div>
           </div>
         </div>
 
-        <!-- Área Productividad & Calificación -->
+        <!-- Área Productividad & Estrellas Amarillas -->
         <div class="glass-card rounded-3xl p-5 space-y-4">
           <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">⚡ Área Productividad</h3>
           
@@ -294,10 +344,10 @@
               <input type="checkbox" id="prod-read" onchange="autoSaveProd('read', this.checked)" class="accent-[#b492cd] w-4 h-4 rounded">
             </div>
 
-            <!-- Calificar mi día con 5 estrellas -->
+            <!-- Estrellas amarillas interactivas (1 al 5) -->
             <div class="space-y-1">
               <span class="text-[10px] font-bold text-stone-500 uppercase">Productividad del Día (1 al 5)</span>
-              <div id="star-rating" class="flex gap-1.5 text-lg cursor-pointer">
+              <div id="star-rating" class="flex gap-1.5 text-xl cursor-pointer text-amber-400">
                 <!-- Generado por JS -->
               </div>
             </div>
@@ -344,11 +394,11 @@
 
     </div>
 
-    <!-- VISTA BUSCADOR E HISTORIAL -->
+    <!-- VISTA BUSCADOR E HISTORIAL Y ANALIZADOR DE PATRONES -->
     <div id="view-search" class="glass-card rounded-3xl p-6 space-y-6 hidden">
       <div>
-        <h3 class="text-base font-black text-stone-800">🔍 Buscador e Historial Inteligente</h3>
-        <p class="text-xs text-stone-500">Busca por palabras clave (ej. "ansiosa", "Moka", "vacuna") o filtra por rango de fechas.</p>
+        <h3 class="text-base font-black text-stone-800">🔍 Buscador Inteligente & Análisis de Patrones</h3>
+        <p class="text-xs text-stone-500">Busca por palabras clave (ej. "ansiosa", "Moka", "vacuna") o analiza rangos largos de fechas (ej. 3 meses).</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
@@ -366,6 +416,9 @@
         </div>
       </div>
 
+      <!-- Resumen estadístico del rango -->
+      <div id="search-stats" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2"></div>
+
       <div id="search-results" class="space-y-3 pt-4 border-t border-[#ebd7e3]">
         <p class="text-xs text-stone-400 text-center py-4">Ingresa un criterio de búsqueda o rango de fechas arriba.</p>
       </div>
@@ -374,13 +427,13 @@
   </main>
 
   <!-- TOAST -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#3d2c3d] text-white px-4 py-2 rounded-2xl shadow-xl text-xs font-bold transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    ✨ Guardado automáticamente
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#3d2c3d] text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    ✨ ¡Día guardado con éxito!
   </div>
 
   <!-- SCRIPT -->
   <script>
-    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V2_';
+    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V10_';
     let currentDate = new Date().toISOString().slice(0, 10);
 
     const defaultMorning = [
@@ -393,6 +446,15 @@
       "Desmaquillarme", "Cepillarme", "Tomar agua", "Sacar a Moka", 
       "Trackers - app", "Devocional", "Gratitud", "Ordenar entorno", 
       "Tomar creatina", "Pendientes", "Orar"
+    ];
+
+    const defaultHabits = [
+      { id: 1, name: "Meditar", condition: "10 min", area: "Spiritual", status: "none" },
+      { id: 2, name: "Leer la Biblia / Devocional", condition: "1 capítulo", area: "Spiritual", status: "none" },
+      { id: 3, name: "Entrenamiento de Moka", condition: "Paseo activo", area: "Health", status: "none" },
+      { id: 4, name: "Skincare", condition: "AM/PM", area: "Self-Care", status: "none" },
+      { id: 5, name: "Espacio espiritual", condition: "Oración", area: "Spiritual", status: "none" },
+      { id: 6, name: "Ejercicio", condition: "Pesas o Cardio", area: "Fitness", status: "none" }
     ];
 
     function getStorageKey(date) {
@@ -415,15 +477,17 @@
           { text: "", completed: false }
         ],
         todoList: [],
-        habits: [
-          { id: 1, name: "Drink 2-3L water", condition: "Daily", area: "Health", checked: false },
-          { id: 2, name: "Eat healthy food", condition: "Daily", area: "Health", checked: false }
-        ],
+        habits: JSON.parse(JSON.stringify(defaultHabits)),
         morningRoutine: defaultMorning.map((t, idx) => ({ id: idx, text: t, checked: false })),
         nightRoutine: defaultNight.map((t, idx) => ({ id: idx, text: t, checked: false })),
-        meals: { breakfast: "", lunch: "", dinner: "", snacks: "" },
+        meals: {
+          breakfast: { text: "", cal: "", prot: "", carb: "", fat: "" },
+          lunch: { text: "", cal: "", prot: "", carb: "", fat: "" },
+          dinner: { text: "", cal: "", prot: "", carb: "", fat: "" },
+          snacks: { text: "", cal: "", prot: "", carb: "", fat: "" }
+        },
         waterGlasses: 0,
-        health: { mood: "", sleep: "", steps: "" },
+        health: { mood: "", energy: "", sleep: "", steps: "" },
         exercises: [],
         prod: { grind: "", study: "", read: false, rating: 0, reminder: "" },
         reflection: { 1: "", 2: "", 3: "", 4: "", 5: "", 6: "" }
@@ -434,13 +498,18 @@
 
     function saveCurrentDay() {
       localStorage.setItem(getStorageKey(currentDate), JSON.stringify(currentData));
-      showToast();
     }
 
-    function showToast() {
+    function saveDayManual() {
+      saveCurrentDay();
+      showToast("💾 ¡Día guardado con éxito!");
+    }
+
+    function showToast(msg) {
       const t = document.getElementById('toast');
+      t.innerText = msg;
       t.classList.remove('translate-y-20', 'opacity-0');
-      setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 1500);
+      setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 2000);
     }
 
     function changeDate(val) {
@@ -528,7 +597,7 @@
       }
     }
 
-    // Top 3 Goals con Checkbox y Edición
+    // Top 3 Goals
     function renderTopGoals() {
       const container = document.getElementById('top-goals-container');
       container.innerHTML = '';
@@ -607,7 +676,7 @@
       renderTodoList();
     }
 
-    // Habit Tracker Limpio
+    // Habit Tracker (3 Estados: none -> done -> fail -> rest -> done)
     function renderHabits() {
       const tbody = document.getElementById('habit-table-body');
       tbody.innerHTML = '';
@@ -617,19 +686,25 @@
       }
 
       currentData.habits.forEach((h, idx) => {
+        let statusBadge = '';
+        if (h.status === 'done') statusBadge = '<span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg font-black">✓ Hecho</span>';
+        else if (h.status === 'fail') statusBadge = '<span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-lg font-black">✗ No hecho</span>';
+        else if (h.status === 'rest') statusBadge = '<span class="px-2.5 py-1 bg-purple-100 text-purple-800 rounded-lg font-black">➖ Descanso</span>';
+        else statusBadge = '<span class="px-2.5 py-1 bg-stone-100 text-stone-500 rounded-lg font-bold">· Pendiente</span>';
+
         tbody.innerHTML += `
           <tr>
             <td class="py-2 pr-2">
               <input type="text" value="${h.name}" oninput="updateHabit(${idx}, 'name', this.value)" placeholder="Hábito..." class="w-full bg-white/60 border border-[#ebd7e3] rounded-lg px-2 py-1 font-bold text-stone-800">
             </td>
             <td class="py-2 pr-2">
-              <input type="text" value="${h.condition}" oninput="updateHabit(${idx}, 'condition', this.value)" placeholder="Ej. Zona 2" class="w-full bg-white/60 border border-[#ebd7e3] rounded-lg px-2 py-1 font-medium text-stone-600">
+              <input type="text" value="${h.condition}" oninput="updateHabit(${idx}, 'condition', this.value)" placeholder="Condición..." class="w-full bg-white/60 border border-[#ebd7e3] rounded-lg px-2 py-1 font-medium text-stone-600">
             </td>
             <td class="py-2 pr-2">
               <input type="text" value="${h.area}" oninput="updateHabit(${idx}, 'area', this.value)" placeholder="Área" class="w-full bg-white/60 border border-[#ebd7e3] rounded-lg px-2 py-1 font-medium text-stone-600">
             </td>
-            <td class="py-2 text-center">
-              <input type="checkbox" ${h.checked ? 'checked' : ''} onchange="toggleHabitCheck(${idx})" class="accent-[#b492cd] w-4 h-4 rounded">
+            <td class="py-2 text-center cursor-pointer" onclick="cycleHabitStatus(${idx})">
+              ${statusBadge}
             </td>
             <td class="py-2 text-right">
               <button onclick="deleteHabit(${idx})" class="text-red-400 font-bold px-2 py-1">✕</button>
@@ -639,7 +714,7 @@
     }
 
     function addHabitRow() {
-      currentData.habits.push({ id: Date.now(), name: "", condition: "", area: "", checked: false });
+      currentData.habits.push({ id: Date.now(), name: "", condition: "", area: "", status: "none" });
       saveCurrentDay();
       renderHabits();
     }
@@ -649,9 +724,13 @@
       saveCurrentDay();
     }
 
-    function toggleHabitCheck(idx) {
-      currentData.habits[idx].checked = !currentData.habits[idx].checked;
+    function cycleHabitStatus(idx) {
+      const current = currentData.habits[idx].status || 'none';
+      if (current === 'none' || current === 'rest') currentData.habits[idx].status = 'done';
+      else if (current === 'done') currentData.habits[idx].status = 'fail';
+      else if (current === 'fail') currentData.habits[idx].status = 'rest';
       saveCurrentDay();
+      renderHabits();
     }
 
     function deleteHabit(idx) {
@@ -706,17 +785,39 @@
       renderRoutines();
     }
 
-    // Meals
+    // Meals & Macros
     function renderMeals() {
-      document.getElementById('meal-breakfast').value = currentData.meals.breakfast || '';
-      document.getElementById('meal-lunch').value = currentData.meals.lunch || '';
-      document.getElementById('meal-dinner').value = currentData.meals.dinner || '';
-      document.getElementById('meal-snacks').value = currentData.meals.snacks || '';
+      ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(m => {
+        const mealObj = currentData.meals[m] || { text: "", cal: "", prot: "", carb: "", fat: "" };
+        const prefix = m[0]; // b, l, d, s
+        document.getElementById(`meal-${m}`).value = mealObj.text || '';
+        document.getElementById(`${prefix}-cal`).value = mealObj.cal || '';
+        document.getElementById(`${prefix}-prot`).value = mealObj.prot || '';
+        document.getElementById(`${prefix}-carb`).value = mealObj.carb || '';
+        document.getElementById(`${prefix}-fat`).value = mealObj.fat || '';
+      });
+      calculateTotalMacros();
     }
 
-    function autoSaveMeal(type, val) {
-      currentData.meals[type] = val;
+    function autoSaveMeal(mealName, field, val) {
+      if(!currentData.meals[mealName]) currentData.meals[mealName] = { text: "", cal: "", prot: "", carb: "", fat: "" };
+      currentData.meals[mealName][field] = val;
       saveCurrentDay();
+      calculateTotalMacros();
+    }
+
+    function calculateTotalMacros() {
+      let tCal = 0, tProt = 0, tCarb = 0, tFat = 0;
+      ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(m => {
+        const obj = currentData.meals[m];
+        if(obj) {
+          tCal += parseFloat(obj.cal || 0);
+          tProt += parseFloat(obj.prot || 0);
+          tCarb += parseFloat(obj.carb || 0);
+          tFat += parseFloat(obj.fat || 0);
+        }
+      });
+      document.getElementById('meal-total-macros').innerText = `🔥 ${tCal} kcal | P:${tProt}g C:${tCarb}g G:${tFat}g`;
     }
 
     // Water
@@ -745,6 +846,7 @@
     // Health
     function renderHealth() {
       document.getElementById('health-mood').value = currentData.health.mood || '';
+      document.getElementById('health-energy').value = currentData.health.energy || '';
       document.getElementById('health-sleep').value = currentData.health.sleep || '';
       document.getElementById('health-steps').value = currentData.health.steps || '';
     }
@@ -754,7 +856,7 @@
       saveCurrentDay();
     }
 
-    // Exercises (Múltiples)
+    // Exercises
     function renderExercises() {
       const container = document.getElementById('exercises-list-container');
       container.innerHTML = '';
@@ -791,7 +893,7 @@
       renderExercises();
     }
 
-    // Productivity & Rating (Estrellas 1 a 5 interactivas)
+    // Productivity & Estrellas Amarillas
     function renderProd() {
       document.getElementById('prod-grind').value = currentData.prod.grind || '';
       document.getElementById('prod-study').value = currentData.prod.study || '';
@@ -844,14 +946,16 @@
       saveCurrentDay();
     }
 
-    // Search
+    // Search & Pattern Analysis
     function executeSearch() {
       const keyword = document.getElementById('search-keyword').value.toLowerCase();
       const fromDate = document.getElementById('search-from').value;
       const toDate = document.getElementById('search-to').value;
       const resultsContainer = document.getElementById('search-results');
+      const statsContainer = document.getElementById('search-stats');
       
       resultsContainer.innerHTML = '';
+      statsContainer.innerHTML = '';
       let matches = [];
 
       for(let i=0; i<localStorage.length; i++) {
@@ -864,17 +968,31 @@
           const dataJson = localStorage.getItem(key);
           if(!dataJson) continue;
 
+          const parsed = JSON.parse(dataJson);
           if(keyword) {
             if(dataJson.toLowerCase().includes(keyword)) {
-              matches.push({ date: dateStr, data: JSON.parse(dataJson) });
+              matches.push({ date: dateStr, data: parsed });
             }
           } else {
-            matches.push({ date: dateStr, data: JSON.parse(dataJson) });
+            matches.push({ date: dateStr, data: parsed });
           }
         }
       }
 
       matches.sort((a, b) => b.date.localeCompare(a.date));
+
+      // Calcular estadísticas del rango analizado
+      if(matches.length > 0) {
+        let totalDays = matches.length;
+        let avgSleep = (matches.reduce((acc, m) => acc + parseFloat(m.data.health.sleep || 0), 0) / totalDays).toFixed(1);
+        let totalGrind = matches.reduce((acc, m) => acc + parseFloat(m.data.prod.grind || 0), 0).toFixed(1);
+
+        statsContainer.innerHTML = `
+          <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Días analizados</strong><span class="text-base font-black text-stone-800">${totalDays}</span></div>
+          <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Promedio Sueño</strong><span class="text-base font-black text-[#b492cd]">${avgSleep} hrs</span></div>
+          <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Total Grind (Póker)</strong><span class="text-base font-black text-[#c879a8]">${totalGrind} hrs</span></div>
+        `;
+      }
 
       if(matches.length === 0) {
         resultsContainer.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No se encontraron registros en el buscador.</p>`;
@@ -891,7 +1009,7 @@
               <span class="text-[10px] font-bold text-[#b492cd] bg-[#f3ecf5] px-2 py-0.5 rounded-md">Ver día ↗</span>
             </div>
             <p class="text-xs text-stone-600"><strong>Intención:</strong> ${dat.intention || 'Sin especificar'}</p>
-            <p class="text-xs text-stone-600"><strong>Ánimo:</strong> ${dat.health.mood || 'N/A'} | <strong>Sueño:</strong> ${dat.health.sleep || '-'} hrs</p>
+            <p class="text-xs text-stone-600"><strong>Ánimo:</strong> ${dat.health.mood || 'N/A'} | <strong>Energía:</strong> ${dat.health.energy || 'N/A'} | <strong>Sueño:</strong> ${dat.health.sleep || '-'} hrs</p>
             ${dat.reflection[1] ? `<p class="text-xs text-stone-500 italic">"Reflexión: ${dat.reflection[1]}"</p>` : ''}
           </div>`;
       });
