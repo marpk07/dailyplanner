@@ -143,7 +143,7 @@
       <!-- FILA HABIT TRACKER Y RUTINAS -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- Habit Tracker (Con 3 estados: Hecho, No hecho, Descanso) -->
+        <!-- Habit Tracker (Con 3 estados) -->
         <div class="lg:col-span-7 glass-card rounded-3xl p-5 space-y-3">
           <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
             <div>
@@ -200,7 +200,7 @@
       <!-- FILA SALUD, MEAL PLAN Y PRODUCTIVIDAD -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- Meal Plan con Macros (Cal, Prot, Carb, Fat) -->
+        <!-- Meal Plan con Macros -->
         <div class="glass-card rounded-3xl p-5 space-y-3">
           <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
             <h3 class="text-xs font-black uppercase tracking-wider text-stone-800">🍽️ Meal Plan & Macros</h3>
@@ -257,7 +257,7 @@
           </div>
         </div>
 
-        <!-- Health, Water, Cycle & Moods (Múltiples) -->
+        <!-- Health, Water, Cycle & Moods -->
         <div class="glass-card rounded-3xl p-5 space-y-3">
           <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">💧 Health, Cycle & Symptoms</h3>
           
@@ -282,7 +282,7 @@
             </select>
           </div>
 
-          <!-- Síntomas Hormonales / Físicos (Checkboxes múltiples) -->
+          <!-- Síntomas -->
           <div class="space-y-1">
             <span class="text-[10px] font-bold text-stone-500 uppercase">Síntomas de hoy</span>
             <div id="symptoms-checkboxes" class="grid grid-cols-2 gap-1.5 text-[11px] font-medium text-stone-700">
@@ -353,7 +353,7 @@
               <input type="checkbox" id="prod-read" onchange="autoSaveProd('read', this.checked)" class="accent-[#b492cd] w-4 h-4 rounded">
             </div>
 
-            <!-- Estrellas amarillas interactivas (1 al 5) -->
+            <!-- Estrellas amarillas interactivas -->
             <div class="space-y-1">
               <span class="text-[10px] font-bold text-stone-500 uppercase">Productividad del Día (1 al 5)</span>
               <div id="star-rating" class="flex gap-1.5 text-xl cursor-pointer text-amber-400">
@@ -407,7 +407,7 @@
     <div id="view-search" class="glass-card rounded-3xl p-6 space-y-6 hidden">
       <div>
         <h3 class="text-base font-black text-stone-800">📊 Reporte Semanal & Análisis de Patrones</h3>
-        <p class="text-xs text-stone-500">Selecciona el rango de fechas (ej. tu semana de lunes a domingo) para ver el resumen automático de productividad, energía, hábitos y síntomas.</p>
+        <p class="text-xs text-stone-500">Selecciona tu rango de fechas para ver el resumen automático de productividad, energía, estados de ánimo y cumplimiento de hábitos.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -421,8 +421,11 @@
         </div>
       </div>
 
-      <!-- Tarjetas de Estadísticas del Rango -->
+      <!-- Tarjetas de Estadísticas Principales -->
       <div id="search-stats" class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2"></div>
+
+      <!-- Bloques de Análisis de Patrones (Energía y Ánimo) -->
+      <div id="pattern-insights" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
 
       <!-- Desglose Día por Día -->
       <div id="search-results" class="space-y-3 pt-4 border-t border-[#ebd7e3]">
@@ -439,7 +442,7 @@
 
   <!-- SCRIPT -->
   <script>
-    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V11_';
+    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V12_';
     let currentDate = new Date().toISOString().slice(0, 10);
 
     const defaultMorning = [
@@ -555,7 +558,6 @@
       currentDate = new Date().toISOString().slice(0, 10);
       document.getElementById('global-date').value = currentDate;
       
-      // Default search dates (current week: Monday to Sunday)
       const today = new Date();
       const dayOfWeek = today.getDay();
       const diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
@@ -589,7 +591,7 @@
       renderReflection();
     }
 
-    // Schedule (5 AM to 5 AM)
+    // Schedule
     function renderSchedule() {
       const container = document.getElementById('schedule-container');
       container.innerHTML = '';
@@ -703,7 +705,7 @@
       renderTodoList();
     }
 
-    // Habit Tracker (3 Estados)
+    // Habits
     function renderHabits() {
       const tbody = document.getElementById('habit-table-body');
       tbody.innerHTML = '';
@@ -812,7 +814,7 @@
       renderRoutines();
     }
 
-    // Meals & Macros
+    // Meals
     function renderMeals() {
       ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(m => {
         const mealObj = currentData.meals[m] || { text: "", cal: "", prot: "", carb: "", fat: "" };
@@ -870,14 +872,13 @@
       renderWater();
     }
 
-    // Health, Cycle & Symptoms
+    // Health
     function renderHealth() {
       document.getElementById('health-cycle').value = currentData.health.cycle || '';
       document.getElementById('health-energy').value = currentData.health.energy || '';
       document.getElementById('health-sleep').value = currentData.health.sleep || '';
       document.getElementById('health-steps').value = currentData.health.steps || '';
 
-      // Render Symptoms Checkboxes
       const symContainer = document.getElementById('symptoms-checkboxes');
       symContainer.innerHTML = '';
       availableSymptoms.forEach(sym => {
@@ -889,7 +890,6 @@
           </label>`;
       });
 
-      // Render Moods Checkboxes
       const moodContainer = document.getElementById('moods-checkboxes');
       moodContainer.innerHTML = '';
       availableMoods.forEach(mood => {
@@ -960,7 +960,7 @@
       renderExercises();
     }
 
-    // Productivity & Estrellas Amarillas
+    // Productivity & Stars
     function renderProd() {
       document.getElementById('prod-grind').value = currentData.prod.grind || '';
       document.getElementById('prod-study').value = currentData.prod.study || '';
@@ -1013,15 +1013,17 @@
       saveCurrentDay();
     }
 
-    // Search & Automatic Weekly Report
+    // Advanced Weekly Report & Pattern Analysis
     function executeSearch() {
       const fromDate = document.getElementById('search-from').value;
       const toDate = document.getElementById('search-to').value;
       const resultsContainer = document.getElementById('search-results');
       const statsContainer = document.getElementById('search-stats');
+      const insightsContainer = document.getElementById('pattern-insights');
       
       resultsContainer.innerHTML = '';
       statsContainer.innerHTML = '';
+      insightsContainer.innerHTML = '';
       let matches = [];
 
       for(let i=0; i<localStorage.length; i++) {
@@ -1046,16 +1048,44 @@
         let avgSleep = (matches.reduce((acc, m) => acc + parseFloat(m.data.health.sleep || 0), 0) / totalDays).toFixed(1);
         let totalGrind = matches.reduce((acc, m) => acc + parseFloat(m.data.prod.grind || 0), 0).toFixed(1);
 
+        // Contadores de Energía y Ánimo
+        let energyCounts = {};
+        let moodCounts = {};
+
+        matches.forEach(m => {
+          const en = m.data.health.energy;
+          if(en) energyCounts[en] = (energyCounts[en] || 0) + 1;
+
+          (m.data.health.moods || []).forEach(mo => {
+            moodCounts[mo] = (moodCounts[mo] || 0) + 1;
+          });
+        });
+
         statsContainer.innerHTML = `
           <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Días en reporte</strong><span class="text-base font-black text-stone-800">${totalDays}</span></div>
           <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Promedio Productividad</strong><span class="text-base font-black text-amber-500">⭐ ${avgProd} / 5</span></div>
           <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Promedio Sueño</strong><span class="text-base font-black text-[#b492cd]">${avgSleep} hrs</span></div>
           <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Total Grind (Póker)</strong><span class="text-base font-black text-[#c879a8]">${totalGrind} hrs</span></div>
         `;
+
+        // Renderizar bloques de patrones
+        let energyHtml = Object.entries(energyCounts).map(([k, v]) => `<span class="bg-white/80 px-2 py-1 rounded-lg font-bold border border-[#ebd7e3]">${k}: <strong>${v} días</strong></span>`).join(' ') || 'Sin registros';
+        let moodHtml = Object.entries(moodCounts).map(([k, v]) => `<span class="bg-white/80 px-2 py-1 rounded-lg font-bold border border-[#ebd7e3]">${k}: <strong>${v} veces</strong></span>`).join(' ') || 'Sin registros';
+
+        insightsContainer.innerHTML = `
+          <div class="glass-card p-4 rounded-3xl space-y-2">
+            <strong class="text-xs font-black uppercase text-stone-700">⚡ Patrones de Energía</strong>
+            <div class="flex flex-wrap gap-1.5 text-xs pt-1">${energyHtml}</div>
+          </div>
+          <div class="glass-card p-4 rounded-3xl space-y-2">
+            <strong class="text-xs font-black uppercase text-stone-700">💖 Estados de Ánimo Frecuentes</strong>
+            <div class="flex flex-wrap gap-1.5 text-xs pt-1">${moodHtml}</div>
+          </div>
+        `;
       }
 
       if(matches.length === 0) {
-        resultsContainer.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No hay registros en este rango de fechas.</p>`;
+        resultsContainer.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No hay registros en este rango de fechas.</p>";
         return;
       }
 
@@ -1066,11 +1096,16 @@
         const dat = m.data;
         const moodsStr = (dat.health.moods || []).join(', ') || 'N/A';
         const symsStr = (dat.health.symptoms || []).join(', ') || 'Ninguno';
+        
+        // Conteo de hábitos cumplidos
+        const habitsList = dat.habits || [];
+        const totalHabits = habitsList.length;
+        const doneHabits = habitsList.filter(h => h.status === 'done').length;
 
         resultsContainer.innerHTML += `
           <div class="glass-card p-4 rounded-2xl space-y-1.5 cursor-pointer transition hover:border-[#b492cd]" onclick="jumpToDate('${d}')">
             <div class="flex justify-between items-center">
-              <strong class="text-xs font-black text-stone-800">📅 ${d} · Productividad: ⭐ ${dat.prod.rating || 0}/5</strong>
+              <strong class="text-xs font-black text-stone-800">📅 ${d} · Productividad: ⭐ ${dat.prod.rating || 0}/5 | Hábitos: ${doneHabits}/${totalHabits} ✓</strong>
               <span class="text-[10px] font-bold text-[#b492cd] bg-[#f3ecf5] px-2 py-0.5 rounded-md">Ver día ↗</span>
             </div>
             <p class="text-xs text-stone-600"><strong>Ánimo:</strong> ${moodsStr} | <strong>Energía:</strong> ${dat.health.energy || 'N/A'} | <strong>Ciclo:</strong> ${dat.health.cycle || 'No especificado'}</p>
