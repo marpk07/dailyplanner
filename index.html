@@ -143,7 +143,7 @@
       <!-- FILA HABIT TRACKER Y RUTINAS -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- Habit Tracker (Con 3 estados) -->
+        <!-- Habit Tracker -->
         <div class="lg:col-span-7 glass-card rounded-3xl p-5 space-y-3">
           <div class="flex justify-between items-center pb-2 border-b border-[#ebd7e3]">
             <div>
@@ -442,7 +442,7 @@
 
   <!-- SCRIPT -->
   <script>
-    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V12_';
+    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_V13_';
     let currentDate = new Date().toISOString().slice(0, 10);
 
     const defaultMorning = [
@@ -1013,7 +1013,7 @@
       saveCurrentDay();
     }
 
-    // Advanced Weekly Report & Pattern Analysis
+    // Advanced Weekly Report & Pattern Analysis (Fixed)
     function executeSearch() {
       const fromDate = document.getElementById('search-from').value;
       const toDate = document.getElementById('search-to').value;
@@ -1048,7 +1048,6 @@
         let avgSleep = (matches.reduce((acc, m) => acc + parseFloat(m.data.health.sleep || 0), 0) / totalDays).toFixed(1);
         let totalGrind = matches.reduce((acc, m) => acc + parseFloat(m.data.prod.grind || 0), 0).toFixed(1);
 
-        // Contadores de Energía y Ánimo
         let energyCounts = {};
         let moodCounts = {};
 
@@ -1068,7 +1067,6 @@
           <div class="glass-card p-3 rounded-2xl text-xs"><strong class="text-stone-400 block">Total Grind (Póker)</strong><span class="text-base font-black text-[#c879a8]">${totalGrind} hrs</span></div>
         `;
 
-        // Renderizar bloques de patrones
         let energyHtml = Object.entries(energyCounts).map(([k, v]) => `<span class="bg-white/80 px-2 py-1 rounded-lg font-bold border border-[#ebd7e3]">${k}: <strong>${v} días</strong></span>`).join(' ') || 'Sin registros';
         let moodHtml = Object.entries(moodCounts).map(([k, v]) => `<span class="bg-white/80 px-2 py-1 rounded-lg font-bold border border-[#ebd7e3]">${k}: <strong>${v} veces</strong></span>`).join(' ') || 'Sin registros';
 
@@ -1085,7 +1083,7 @@
       }
 
       if(matches.length === 0) {
-        resultsContainer.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No hay registros en este rango de fechas.</p>";
+        resultsContainer.innerHTML = `<p class="text-xs text-stone-400 text-center py-6">No hay registros en este rango de fechas.</p>`;
         return;
       }
 
@@ -1097,7 +1095,6 @@
         const moodsStr = (dat.health.moods || []).join(', ') || 'N/A';
         const symsStr = (dat.health.symptoms || []).join(', ') || 'Ninguno';
         
-        // Conteo de hábitos cumplidos
         const habitsList = dat.habits || [];
         const totalHabits = habitsList.length;
         const doneHabits = habitsList.filter(h => h.status === 'done').length;
