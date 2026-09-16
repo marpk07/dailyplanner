@@ -6,6 +6,10 @@
   <title>MARY · Daily Planner & Journal</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
   <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🌸?style=apple">
 
   <style>
@@ -41,11 +45,6 @@
       box-shadow: 0 4px 15px rgba(180, 146, 205, 0.4);
     }
 
-    .modal-overlay {
-      background-color: rgba(61, 44, 61, 0.45);
-      backdrop-filter: blur(6px);
-    }
-
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f0e6ed; }
     ::-webkit-scrollbar-thumb { background: #d9a7c7; border-radius: 999px; }
@@ -53,6 +52,7 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-[#d9a7c7] selection:text-white">
 
+  <!-- HEADER -->
   <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-[#ebd7e3] shadow-xs">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
@@ -75,18 +75,13 @@
     </div>
   </header>
 
-  <div class="bg-[#f7f0f4] border-b border-[#ebd7e3] px-4 py-1.5 flex justify-between items-center text-[11px] font-bold text-stone-600 max-w-7xl mx-auto w-full">
-    <span>💾 Sincronización Celular ⇄ PC:</span>
-    <div class="space-x-3">
-      <button onclick="openExportModal()" class="text-[#b492cd] hover:underline cursor-pointer">📤 Copiar Datos</button>
-      <button onclick="openImportModal()" class="text-[#5fa89b] hover:underline cursor-pointer">📥 Pegar Datos</button>
-    </div>
-  </div>
-
+  <!-- MAIN CONTAINER -->
   <main class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 space-y-6">
 
+    <!-- VISTA PLANNER DIARIO -->
     <div id="view-planner" class="space-y-6">
 
+      <!-- BLOQUE SUPERIOR: VERSÍCULO, INTENCIÓN Y GRATITUD -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="glass-card rounded-3xl p-5 space-y-2 border-l-4 border-l-[#b492cd]">
           <span class="text-[10px] font-black uppercase text-[#b492cd] tracking-wider">✝️ Versículo del Día</span>
@@ -109,6 +104,7 @@
         </div>
       </div>
 
+      <!-- FILA CENTRAL: SCHEDULE (5 AM A 5 AM) Y PRIORIDADES/TODO -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <div class="lg:col-span-5 glass-card rounded-3xl p-5 space-y-3">
@@ -135,6 +131,7 @@
         </div>
       </div>
 
+      <!-- FILA HABIT TRACKER Y RUTINAS -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <div class="lg:col-span-7 glass-card rounded-3xl p-5 space-y-3">
@@ -181,6 +178,7 @@
 
       </div>
 
+      <!-- FILA SALUD, MEAL PLAN Y PRODUCTIVIDAD -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         <div class="glass-card rounded-3xl p-5 space-y-3">
@@ -329,6 +327,7 @@
 
       </div>
 
+      <!-- JOURNAL & REFLEXIÓN PROFUNDA -->
       <div class="glass-card rounded-3xl p-6 space-y-4">
         <h3 class="text-xs font-black uppercase tracking-wider text-stone-800 pb-2 border-b border-[#ebd7e3]">✍️ Journal & Reflexión del Día</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -361,6 +360,7 @@
 
     </div>
 
+    <!-- VISTA REPORTES Y ANÁLISIS DE PATRONES -->
     <div id="view-search" class="glass-card rounded-3xl p-6 space-y-6 hidden">
       <div>
         <h3 class="text-base font-black text-stone-800">📊 Reporte Semanal & Análisis de Patrones</h3>
@@ -387,36 +387,31 @@
 
   </main>
 
+  <!-- TOAST -->
   <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#3d2c3d] text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
     ✨ ¡Día guardado con éxito!
   </div>
 
-  <div id="modal-export" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl border border-[#ebd7e3]">
-      <h3 class="text-sm font-black text-stone-800 text-center">📤 Copiar tus datos del Planner</h3>
-      <p class="text-[11px] text-stone-500 text-center">Copia este código y mándatelo por WhatsApp o correo a tu computadora:</p>
-      <textarea id="export-textarea" class="w-full h-32 bg-[#f7faf8] border border-[#ebd7e3] rounded-2xl p-2 text-[10px] font-mono text-stone-700 outline-none resize-none" readonly></textarea>
-      <div class="flex justify-between pt-2">
-        <button onclick="closeModal('modal-export')" class="px-4 py-1.5 bg-stone-100 rounded-xl text-xs font-bold text-stone-700 cursor-pointer">Cerrar</button>
-        <button onclick="copyExportText()" class="px-4 py-1.5 bg-[#b492cd] text-white rounded-xl text-xs font-black cursor-pointer">📋 Copiar al Portapapeles</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="modal-import" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl border border-[#ebd7e3]">
-      <h3 class="text-sm font-black text-stone-800 text-center">📥 Pegar tus datos del Planner</h3>
-      <p class="text-[11px] text-stone-500 text-center">Pega aquí el código que trajiste de tu otro dispositivo:</p>
-      <textarea id="import-textarea" placeholder="Pega el código JSON aquí..." class="w-full h-32 bg-[#f7faf8] border border-[#ebd7e3] rounded-2xl p-2 text-[10px] font-mono text-stone-700 outline-none resize-none"></textarea>
-      <div class="flex justify-between pt-2">
-        <button onclick="closeModal('modal-import')" class="px-4 py-1.5 bg-stone-100 rounded-xl text-xs font-bold text-stone-700 cursor-pointer">Cancelar</button>
-        <button onclick="applyImportText()" class="px-4 py-1.5 bg-[#5fa89b] text-white rounded-xl text-xs font-black cursor-pointer">✨ Restaurar Datos</button>
-      </div>
-    </div>
-  </div>
-
+  <!-- SCRIPT -->
   <script>
-    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_PERMANENT_';
+    // Configuración Firebase Real enlazada con tus proyectos
+    const firebaseConfig = {
+      apiKey: "AIzaSyCnhvfyXpwJdYOQFCvsyHDhgW9F3X7ARR4",
+      authDomain: "marpk-816dd.firebaseapp.com",
+      databaseURL: "https://marpk-816dd-default-rtdb.firebaseio.com",
+      projectId: "marpk-816dd",
+      storageBucket: "marpk-816dd.firebasestorage.app",
+      messagingSenderId: "189644122232",
+      appId: "1:189644122232:web:ed7894f1510a373d44658d"
+    };
+
+    let db = null;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } catch(e) {}
+
+    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_FIREBASE_';
     let currentDate = new Date().toISOString().slice(0, 10);
 
     const defaultMorning = [
@@ -493,6 +488,9 @@
 
     function saveCurrentDay() {
       localStorage.setItem(getStorageKey(currentDate), JSON.stringify(currentData));
+      if (db) {
+        db.ref('mary_planner/' + currentDate).set(currentData);
+      }
     }
 
     function saveDayManual() {
@@ -511,6 +509,7 @@
       currentDate = val;
       currentData = loadDayData(currentDate);
       renderAllUI();
+      listenFirebaseForDate(currentDate);
     }
 
     function switchTab(tab) {
@@ -528,6 +527,20 @@
       }
     }
 
+    function listenFirebaseForDate(date) {
+      if (db) {
+        db.ref('mary_planner/' + date).off(); // Quitar listeners anteriores
+        db.ref('mary_planner/' + date).on('value', (snapshot) => {
+          const val = snapshot.val();
+          if (val) {
+            currentData = val;
+            localStorage.setItem(getStorageKey(date), JSON.stringify(currentData));
+            renderAllUI();
+          }
+        });
+      }
+    }
+
     function initApp() {
       currentDate = new Date().toISOString().slice(0, 10);
       document.getElementById('global-date').value = currentDate;
@@ -541,6 +554,7 @@
 
       currentData = loadDayData(currentDate);
       renderAllUI();
+      listenFirebaseForDate(currentDate);
     }
 
     function renderAllUI() {
@@ -985,78 +999,6 @@
       const inputs = document.querySelectorAll('.gratitude-input');
       currentData.gratitude = Array.from(inputs).map(inp => inp.value);
       saveCurrentDay();
-    }
-
-    // Exportar / Importar Planner (Copiar y Pegar)
-    function openExportModal() {
-      let allPlannerData = {};
-      for(let i=0; i<localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if(key && key.startsWith(STORAGE_PREFIX)) {
-          allPlannerData[key] = localStorage.getItem(key);
-        }
-      }
-      const txt = document.getElementById('export-textarea');
-      if (txt) {
-        txt.value = JSON.stringify(allPlannerData);
-        openModal('modal-export');
-      }
-    }
-
-    function copyExportText() {
-      const txt = document.getElementById('export-textarea');
-      if (txt) {
-        txt.select();
-        txt.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(txt.value).then(() => {
-          showToast("📋 ¡Copiado al portapapeles!");
-          closeModal('modal-export');
-        }).catch(() => {
-          alert("Selecciona el texto y cópialo manualmente.");
-        });
-      }
-    }
-
-    function openImportModal() {
-      const txt = document.getElementById('import-textarea');
-      if (txt) txt.value = '';
-      openModal('modal-import');
-    }
-
-    function applyImportText() {
-      const txt = document.getElementById('import-textarea');
-      if (!txt || !txt.value.trim()) {
-        alert("Por favor pega el código primero.");
-        return;
-      }
-      try {
-        const parsed = JSON.parse(txt.value.trim());
-        if (parsed) {
-          for (let key in parsed) {
-            if (key.startsWith(STORAGE_PREFIX)) {
-              localStorage.setItem(key, parsed[key]);
-            }
-          }
-          currentData = loadDayData(currentDate);
-          renderAllUI();
-          closeModal('modal-import');
-          showToast("✨ ¡Datos restaurados con éxito!");
-        } else {
-          alert("El código no tiene el formato correcto.");
-        }
-      } catch (e) {
-        alert("El texto pegado no es un código válido.");
-      }
-    }
-
-    function openModal(id) { 
-      const el = document.getElementById(id);
-      if(el) el.classList.remove('hidden'); 
-    }
-    
-    function closeModal(id) { 
-      const el = document.getElementById(id);
-      if(el) el.classList.add('hidden'); 
     }
 
     // Search & Automatic Weekly Report
