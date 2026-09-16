@@ -534,6 +534,9 @@
       if (db) {
         if (unsubscribeFirestore) unsubscribeFirestore();
         unsubscribeFirestore = db.collection('mary_planner').doc(date).onSnapshot((doc) => {
+          // Si el cambio viene de nuestra propia escritura local, lo ignoramos para no interrumpir el tipeo
+          if (doc.metadata.hasPendingWrites) return;
+
           if (doc.exists) {
             const val = doc.data();
             if (val) {
