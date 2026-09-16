@@ -6,9 +6,9 @@
   <title>MARY · Daily Planner & Journal</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <link rel="apple-touch-icon" href="https://emojicdn.elk.sh/🌸?style=apple">
 
@@ -394,7 +394,7 @@
 
   <!-- SCRIPT -->
   <script>
-    // Configuración Firebase Real enlazada con tus proyectos
+    // Configuración Firebase Firestore con tus credenciales reales
     const firebaseConfig = {
       apiKey: "AIzaSyCnhvfyXpwJdYOQFCvsyHDhgW9F3X7ARR4",
       authDomain: "marpk-816dd.firebaseapp.com",
@@ -408,10 +408,10 @@
     let db = null;
     try {
       firebase.initializeApp(firebaseConfig);
-      db = firebase.database();
-    } catch(e) {}
+      db = firebase.firestore();
+    } catch(e) { console.warn("Firebase error:", e); }
 
-    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_FIREBASE_';
+    const STORAGE_PREFIX = 'MARY_DAILY_PLANNER_FIRESTORE_';
     let currentDate = new Date().toISOString().slice(0, 10);
 
     const defaultMorning = [
@@ -489,7 +489,8 @@
     function saveCurrentDay() {
       localStorage.setItem(getStorageKey(currentDate), JSON.stringify(currentData));
       if (db) {
-        db.ref('mary_planner/' + currentDate).set(currentData);
+        db.collection('mary_planner').doc(currentDate).set(currentData)
+          .catch(err => console.log("Error en Firestore:", err));
       }
     }
 
@@ -509,7 +510,7 @@
       currentDate = val;
       currentData = loadDayData(currentDate);
       renderAllUI();
-      listenFirebaseForDate(currentDate);
+      listenFirestoreForDate(currentDate);
     }
 
     function switchTab(tab) {
@@ -527,15 +528,19 @@
       }
     }
 
-    function listenFirebaseForDate(date) {
+    let unsubscribeFirestore = null;
+
+    function listenFirestoreForDate(date) {
       if (db) {
-        db.ref('mary_planner/' + date).off(); // Quitar listeners anteriores
-        db.ref('mary_planner/' + date).on('value', (snapshot) => {
-          const val = snapshot.val();
-          if (val) {
-            currentData = val;
-            localStorage.setItem(getStorageKey(date), JSON.stringify(currentData));
-            renderAllUI();
+        if (unsubscribeFirestore) unsubscribeFirestore();
+        unsubscribeFirestore = db.collection('mary_planner').doc(date).onSnapshot((doc) => {
+          if (doc.exists) {
+            const val = doc.data();
+            if (val) {
+              currentData = val;
+              localStorage.setItem(getStorageKey(date), JSON.stringify(currentData));
+              renderAllUI();
+            }
           }
         });
       }
@@ -554,7 +559,7 @@
 
       currentData = loadDayData(currentDate);
       renderAllUI();
-      listenFirebaseForDate(currentDate);
+      listenFirestoreForDate(currentDate);
     }
 
     function renderAllUI() {
